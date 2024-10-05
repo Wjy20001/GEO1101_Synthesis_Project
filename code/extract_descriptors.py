@@ -1,8 +1,10 @@
-import os
 import glob
+import os
+
 import cv2
 import numpy as np
 from tqdm import tqdm
+
 
 def extract_descriptors(image_dir):
     # Initialize ORB detector
@@ -33,6 +35,7 @@ def extract_descriptors(image_dir):
 
     all_descriptors = np.vstack(all_descriptors)
     return all_descriptors, image_paths
+
 
 if __name__ == "__main__":
     # Example usage (would be handled in `run_setup.py`)

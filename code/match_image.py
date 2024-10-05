@@ -1,24 +1,40 @@
 import argparse
-import cv2
-import numpy as np
 import os
 
+import cv2
+import numpy as np
+
 # Define the synthesis folder (only this needs to be changed by other users)
-synthesis_folder = r"C:\Users\Noah Alting\Documents\TUDelft\Geomatics\Synthesis_Project"
+synthesis_folder = os.path.dirname(os.path.abspath(__file__))
 
 # Paths to the required subfolders
 code_folder = os.path.join(synthesis_folder, "code")
 data_folder = os.path.join(synthesis_folder, "data")
+
 
 # Function to parse command line arguments
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Match a sample image to a set of BoW vectors."
     )
-    parser.add_argument("sample_image", type=str, help="Path to the sample image for matching.")
-    parser.add_argument("--dataset", type=str, required=True, help="Name of the dataset folder to use.")
-    parser.add_argument("--show_image", action="store_true", help="Show the sample and best match images.")
+    parser.add_argument(
+        "sample_image",
+        type=str,
+        help="Path to the sample image for matching.",
+    )
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        required=True,
+        help="Name of the dataset folder to use.",
+    )
+    parser.add_argument(
+        "--show_image",
+        action="store_true",
+        help="Show the sample and best match images.",
+    )
     return parser.parse_args()
+
 
 # Function to calculate BoW vector for a set of descriptors using KMeans clustering
 def calculate_bow_vector(descriptors, kmeans):
@@ -28,16 +44,18 @@ def calculate_bow_vector(descriptors, kmeans):
         np.add.at(bow_vector, clusters, 1)
     return bow_vector
 
+
 # Function to resize image for display
 def resize_image(image, width=300, height=500):
     return cv2.resize(image, (width, height))
+
 
 def main():
     args = parse_args()
 
     # Construct the path to the dataset folder inside the data folder
     dataset_folder = os.path.join(data_folder, args.dataset)
-    frames_folder = os.path.join(dataset_folder, 'frames')
+    frames_folder = os.path.join(dataset_folder, "frames")
 
     # Check if the dataset folder exists
     if not os.path.exists(dataset_folder):
@@ -46,9 +64,13 @@ def main():
 
     # Load the pre-saved KMeans model, BoW vectors, and image names from the specified dataset folder
     print("Loading KMeans model, BoW vectors, and image names...")
-    kmeans = np.load(os.path.join(dataset_folder, "kmeans_model.npy"), allow_pickle=True).item()
+    kmeans = np.load(
+        os.path.join(dataset_folder, "kmeans_model.npy"), allow_pickle=True
+    ).item()
     bow_vectors = np.load(os.path.join(dataset_folder, "bow_vectors.npy"))
-    image_names = np.load(os.path.join(dataset_folder, "image_names.npy"), allow_pickle=True)
+    image_names = np.load(
+        os.path.join(dataset_folder, "image_names.npy"), allow_pickle=True
+    )
 
     # Calculate BoW vector for the sample image
     print(f"Processing sample image: {args.sample_image}")
@@ -67,11 +89,15 @@ def main():
     distances = np.linalg.norm(bow_vectors - sample_bow_vector, axis=1)
     best_match_index = np.argmin(distances)
 
-    print(f"The closest image to the sample is: {image_names[best_match_index]}")
+    print(
+        f"The closest image to the sample is: {image_names[best_match_index]}"
+    )
     print(f"Distance: {distances[best_match_index]}")
 
     # Generate the full path to the best match image (relative to the dataset's frames folder)
-    best_match_image_path = os.path.join(frames_folder, image_names[best_match_index])
+    best_match_image_path = os.path.join(
+        frames_folder, image_names[best_match_index]
+    )
 
     # Check if the image file exists
     if not os.path.exists(best_match_image_path):
@@ -89,11 +115,11 @@ def main():
         # Show the sample image
         sample_image_display = cv2.imread(args.sample_image)
         resized_sample = resize_image(sample_image_display)
-        cv2.imshow('Sample Image', resized_sample)
+        cv2.imshow("Sample Image", resized_sample)
 
         # Show the best match image
         resized_best_match = resize_image(best_match_image)
-        cv2.imshow('Best Match Image', resized_best_match)
+        cv2.imshow("Best Match Image", resized_best_match)
 
         # Wait until a key is pressed, then close the windows
         cv2.waitKey(0)
