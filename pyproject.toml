@@ -1,0 +1,74 @@
+[tool.poetry]
+name = "geo1101-synthesis-project"
+version = "0.1.0"
+description = ""
+authors = ["HideBa <baba.papa1120.ba@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^2.1.1"
+scikit-learn = "^1.5.2"
+tqdm = "^4.66.5"
+glob2 = "^0.7"
+opencv-python = "^4.10.0.84"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+black = "^24.8.0"
+mypy = "^1.11.2"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 78
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.flake8]
+exclude = [
+  ".git",
+  "__pycache__",
+  "build",
+  "dist",
+  ".venv",
+  ".eggs",
+  ".mypy_cache",
+  ".tox",
+]
+
+
+max-line-length = 78
+[tool.mypy]
+files = ["code/**/*.py"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+ignore_missing_imports = true
+check_untyped_defs = true
+disallow_untyped_calls = true
+disallow_subclassing_any = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_untyped_decorators = true
+warn_unused_ignores = true
+strict_optional = true
+strict_param_types = true
+warn_untyped_fields = true
