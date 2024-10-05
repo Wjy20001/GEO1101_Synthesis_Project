@@ -27,13 +27,21 @@ The project is structured as follows:
   - `scikit-learn`
   - `tqdm`
   - `argparse`
-  - `DBOW` 
+  - `DBOW`
   TO DO: how to install dbow because it is not in pip!
 
-  
+
 To install the required libraries using `pip`, run:
 ```bash
 pip install numpy opencv-python scikit-learn tqdm argparse
+```
+
+## Recommended Tool for Dependency Management
+
+We recommend using [Poetry](https://python-poetry.org/) for dependency management and packaging. Poetry helps you declare, manage, and install dependencies of Python projects, ensuring you have the right stack everywhere.
+Once you install poetry, you can simple install dependencies like this. It will create a virtual environment and install all the dependencies in it.
+```bash
+poetry install
 ```
 
 ## Scripts and Their Functionality
@@ -116,5 +124,18 @@ Once the BoW model is created, match a sample image to find its closest match in
 ```bash
 python code/match_image.py data/test_user_images/sample_001.png --dataset dataset_x --show_image
 ```
+
+## Lint, Format, and Test
+So we all can work on the same source code, it's reccoemnded to run the following commands before pushing the code.
+```bash
+poetry run black .
+poetry run isort .
+poetry run flake8 .
+```
+or simply with one command
+```bash
+poetry run check
+```
+These commands will format the code, check for linting errors and sort the imports so we don't need to have unnecessary merge conflicts.
 
 ---
