@@ -1,7 +1,9 @@
 import argparse
-import cv2
 import os
+
+import cv2
 from tqdm import tqdm
+
 
 # Function to extract frames from video
 def extract_frames(video_path, frame_step=20):
@@ -22,7 +24,11 @@ def extract_frames(video_path, frame_step=20):
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
     # Loop through the video and save frames with tqdm progress bar
-    with tqdm(total=total_frames // frame_step, desc="Extracting Frames", unit="frame") as pbar:
+    with tqdm(
+        total=total_frames // frame_step,
+        desc="Extracting Frames",
+        unit="frame",
+    ) as pbar:
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
@@ -31,7 +37,9 @@ def extract_frames(video_path, frame_step=20):
             # Save the frame only if it matches the frame_step
             if frame_count % frame_step == 0:
                 # Use 5 digits in the filename (e.g., frame_00001.png)
-                frame_filename = os.path.join(output_folder, f'frame_{frame_count:05d}.png')
+                frame_filename = os.path.join(
+                    output_folder, f"frame_{frame_count:05d}.png"
+                )
                 cv2.imwrite(frame_filename, frame)
                 pbar.update(1)
 
@@ -41,18 +49,27 @@ def extract_frames(video_path, frame_step=20):
     cap.release()
     cv2.destroyAllWindows()
 
+
 # Function to parse command line arguments
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Extract frames from a video file.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
     # Only requires video_path and frame_step
-    parser.add_argument("video_path", type=str, help="Path to the input video file.")
-    parser.add_argument("--frame_step", type=int, default=20, help="Save every nth frame (e.g., 1 = every frame, 20 = every 20th frame)")
+    parser.add_argument(
+        "video_path", type=str, help="Path to the input video file."
+    )
+    parser.add_argument(
+        "--frame_step",
+        type=int,
+        default=20,
+        help="Save every nth frame (e.g., 1 = every frame, 20 = every 20th frame)",
+    )
 
     return parser.parse_args()
+
 
 def main():
     # Parse command-line arguments
@@ -60,6 +77,7 @@ def main():
 
     # Call the extract_frames function with parsed arguments
     extract_frames(args.video_path, args.frame_step)
+
 
 if __name__ == "__main__":
     main()
