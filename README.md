@@ -126,7 +126,7 @@ python code/match_image.py data/test_user_images/sample_001.png --dataset datase
 ```
 
 ## Lint, Format, and Test
-So we all can work on the same source code, it's reccoemnded to run the following commands before pushing the code.
+So we all can work on the same source code, it's recommended to run the following commands before pushing the code.
 ```bash
 poetry run black .
 poetry run isort .
