@@ -149,3 +149,4 @@ data/**/*.jpeg
 data/**/*.jpg
 data/**/*.npy
 data/**/*.pickle
+!data/user_images/*
