@@ -2,7 +2,7 @@ import glob
 import os
 import cv2
 import numpy as np
-
+from tqdm import tqdm
 # import numpy as np
 # import extract_descriptors
 # import perform_kmeans
@@ -16,7 +16,7 @@ import dbow
 
 
 def training(
-    dataset_dir: str = "data/training",
+    dataset_dir: str = os.path.join("data", "training"),
     cluster_num: int = 10,
     depth=2,
     clear_cache: bool = False,
@@ -34,18 +34,19 @@ def training(
     image_paths = glob.glob(png_path) + glob.glob(jpeg_path)
     images = []
     image_names = np.array([])
-    for image_path in image_paths:
+    for image_path in tqdm(image_paths, desc='adding image to images'):
         images.append(cv2.imread(image_path))
         image_name = os.path.basename(image_path)
         image_names = np.append(image_names, image_name)
-    print("image_names: ", image_names)
+    # print("image_names: ", image_names)
     vocabulary = dbow.Vocabulary(images, cluster_num, depth)
     print("Vocabulary: ", vocabulary)
+    
     vocabulary.save(VOCABULARY_CACHE_PATH)
     np.save(IMAGE_NAMES_CACHE_PATH, image_names)
 
     db = dbow.Database(vocabulary)
-    for image in images:
+    for image in tqdm(images, desc="Processing images"):
         kps, descs = orb.detectAndCompute(image, None)
         descs = [dbow.ORB.from_cv_descriptor(desc) for desc in descs]
         db.add(descs)
