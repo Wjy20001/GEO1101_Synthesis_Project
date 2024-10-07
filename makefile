@@ -43,3 +43,13 @@ clean:
 	@echo "Cleaning up..."
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "__pycache__" -exec rm -r {} +
+
+.PHONY: training
+training:
+	@echo "Running training..."
+	poetry run python code/training.py
+
+.PHONY: classify
+classify:
+	@echo "Running classification..."
+	poetry run python code/classify.py
