@@ -12,9 +12,9 @@ program_dir = os.getcwd()
 # =======================================
 
 VOCABULARY_CACHE_PATH = os.path.join(
-    program_dir, "data/cache/vocabulary.pickle"
+    program_dir, "data", "cache", "vocabulary.pickle"
 )
-DATABASE_CACHE_PATH = os.path.join(program_dir, "data/cache/database.pickle")
+DATABASE_CACHE_PATH = os.path.join(program_dir, "data", "cache", "database.pickle")
 IMAGE_NAMES_CACHE_PATH = os.path.join(
-    program_dir, "data/cache/image_name_index_pairs.npy"
+    program_dir, "data", "cache", "image_name_index_pairs.npy"
 )

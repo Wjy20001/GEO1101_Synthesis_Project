@@ -28,8 +28,8 @@ def find_matched_images(
 def main():
     program_dir = os.getcwd()
     user_images = glob.glob(
-        os.path.join(program_dir, "data/user_images/*.jpg")
-    ) + glob.glob(os.path.join(program_dir, "data/user_images/*.png"))
+        os.path.join(program_dir, "data", "user_images", "*.jpg")
+    ) + glob.glob(os.path.join(program_dir, "data", "user_images", ".png"))
     images = [cv2.imread(image) for image in user_images]
     db = training.training()
     print("db: ", db)
@@ -39,19 +39,22 @@ def main():
 
     cwd = os.getcwd()
     image_names = np.load(IMAGE_NAMES_CACHE_PATH)
+    
     for i, image in enumerate(images):
-        matched_images = find_matched_images(image, db, image_names, 3)
-        temp_list: list[tuple[str, float]] = []
-        for match in matched_images:
-            file_name, score = match
-            file_path = os.path.join(cwd, "data/training/", file_name)
-            image_score: tuple[str, float] = [file_path, score]
-            temp_list.append(image_score)
+        if i%5 == 0: #print every fifth matching result
+            
+            matched_images = find_matched_images(image, db, image_names, 3)
+            temp_list: list[tuple[str, float]] = []
+            for match in matched_images:
+                file_name, score = match
+                file_path = os.path.join(cwd, "data", "training", file_name)
+                image_score: tuple[str, float] = [file_path, score]
+                temp_list.append(image_score)
 
-        preview(image, temp_list)
-        print("user image name: ", user_images[i])
-        print("matched images: ", matched_images)
-        print("-" * 100)
+            preview(image, temp_list)
+            print("user image name: ", user_images[i])
+            print("matched images: ", matched_images)
+            print("-" * 100)
 
 
 if __name__ == "__main__":
