@@ -41,9 +41,6 @@ def main():
     image_names = np.load(IMAGE_NAMES_CACHE_PATH)
     all_images = []
     for i, image in enumerate(images):
-        print(f"{i} th call")
-        if i > 10:  # MEMO: This is only for debugging
-            break
         matched_images = find_matched_images(image, db, image_names, 3)
         temp_list: list[tuple[str, float]] = []
         for match in matched_images:
@@ -52,9 +49,6 @@ def main():
             image_score: tuple[str, float] = [file_path, score]
             temp_list.append(image_score)
         all_images.append((image, temp_list))
-        print("user image name: ", user_images[i])
-        print("matched images: ", matched_images)
-        print("-" * 100)
 
     preview(all_images)
 
@@ -71,9 +65,6 @@ def match_user_image(user_image_paths: list[str]):
     image_names = np.load(IMAGE_NAMES_CACHE_PATH)
     all_images = []
     for i, image in enumerate(images):
-        print(f"{i} th call")
-        if i > 10:  # MEMO: This is only for debugging
-            break
         matched_images = find_matched_images(image, db, image_names, 3)
         temp_list: list[tuple[str, float]] = []
         for match in matched_images:
@@ -82,9 +73,6 @@ def match_user_image(user_image_paths: list[str]):
             image_score: tuple[str, float] = (file_path, score)
             temp_list.append(image_score)
         all_images.append((image, temp_list))
-        print("user image name: ", user_image_paths[i])
-        print("matched images: ", matched_images)
-        print("-" * 100)
 
     preview(all_images)
 
@@ -95,9 +83,9 @@ if __name__ == "__main__":
     user_images = [
         os.path.join(user_image_dir, filename)
         for filename in [
-            "validation_001.png",
-            "validation_002.png",
-            "validation_003.png",
+            "validation_001.jpg",
+            "validation_002.jpg",
+            "validation_003.jpg",
         ]
     ]
     match_user_image(user_images)
