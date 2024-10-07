@@ -37,16 +37,18 @@ def main():
         print("Database not found")
         return
 
+    cwd = os.getcwd()
     image_names = np.load(IMAGE_NAMES_CACHE_PATH)
     for i, image in enumerate(images):
-        if i > 5:
-            break
-        matched_images = find_matched_images(image, db, image_names)
-        matched_images = [
-            (os.path.join(os.getcwd(), "/data/training", path), score)
-            for path, score in matched_images
-        ]
-        preview(image, matched_images)
+        matched_images = find_matched_images(image, db, image_names, 3)
+        temp_list: list[tuple[str, float]] = []
+        for match in matched_images:
+            file_name, score = match
+            file_path = os.path.join(cwd, "data/training/", file_name)
+            image_score: tuple[str, float] = [file_path, score]
+            temp_list.append(image_score)
+
+        preview(image, temp_list)
         print("user image name: ", user_images[i])
         print("matched images: ", matched_images)
         print("-" * 100)
