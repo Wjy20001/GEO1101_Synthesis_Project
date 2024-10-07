@@ -144,9 +144,8 @@ cython_debug/
 .DS_Store
 
 # Data dir
-data/test_user_images/
-data/defisheyed_1/
-data/test_geolab/
-data/user_images/
-data/training/
-data/cache
+data/**/*.png
+data/**/*.jpeg
+data/**/*.jpg
+data/**/*.npy
+data/**/*.pickle
