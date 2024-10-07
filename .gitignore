@@ -147,3 +147,6 @@ cython_debug/
 data/test_user_images/
 data/defisheyed_1/
 data/test_geolab/
+data/user_images/
+data/training/
+data/cache
