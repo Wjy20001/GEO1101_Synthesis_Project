@@ -2,9 +2,15 @@ import pandas as pd
 import numpy as np
 from scipy.spatial import KDTree
 import matplotlib.pyplot as plt
+import os
+
+program_dir = os.getcwd()  # Get the current working directory
 
 # Step 1: Load the 2D points from a CSV file
-df = pd.read_csv(r'D:\geomatics\geo1101\floorplanvis\BK HALL wall edited.csv')  # replace 'points.csv' with your file path
+path_BK_wall_csv = os.path.join(
+        program_dir, "data", "csvs", "BK_HALL_wall_edited.csv"
+    )
+df = pd.read_csv(path_BK_wall_csv)  # replace 'points.csv' with your file path
 
 # Convert the DataFrame to a NumPy array
 points = df[['x', 'y']].values
