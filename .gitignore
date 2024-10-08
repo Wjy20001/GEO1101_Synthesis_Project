@@ -149,5 +149,5 @@ data/**/*.jpeg
 data/**/*.jpg
 data/**/*.npy
 data/**/*.pickle
+data/**/*.csv
 !data/user_images/*
-!data/csvs/*
