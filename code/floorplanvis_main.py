@@ -8,7 +8,7 @@ program_dir = os.getcwd()  # Get the current working directory
 
 # Step 1: Load the 2D points from a CSV file
 path_BK_wall_csv = os.path.join(
-        program_dir, "data", "csvs", "BK_HALL_wall_edited.csv"
+        program_dir, "data", "csvs", "BK_wall_coordinates.csv"
     )
 df = pd.read_csv(path_BK_wall_csv)  # replace 'points.csv' with your file path
 
