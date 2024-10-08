@@ -1,10 +1,11 @@
 import glob
 import os
+
 import cv2
 import dbow
 import numpy as np
-from const import IMAGE_NAMES_CACHE_PATH
 import training
+from const import IMAGE_NAMES_CACHE_PATH
 from preview import preview
 
 
