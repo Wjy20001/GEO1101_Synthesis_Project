@@ -2,11 +2,19 @@ import pandas as pd
 import numpy as np
 from scipy.spatial import KDTree
 import matplotlib.pyplot as plt
+import os
+
+program_dir = os.getcwd()
 
 # Load the three CSV files
-image_matching_df = pd.read_csv('Image matching validation sheet - Sheet1.csv')  # Replace with actual file path
-orbit_import_df = pd.read_csv('orbit_import_camera.csv')  # Replace with actual file path
-df = pd.read_csv('BK HALL wall edited.csv')  # Replace with actual file path
+path_validation_csv = os.path.join(program_dir, "data", "csvs", "manual_validation.csv")
+image_matching_df = pd.read_csv(path_validation_csv)
+
+path_slam_coordinates_csv = os.path.join(program_dir, "data", "csvs", "slam_camera_coordinates.csv")
+orbit_import_df = pd.read_csv(path_slam_coordinates_csv)
+
+path_BK_wall_csv = os.path.join(program_dir, "data", "csvs", "BK_wall_coordinates.csv")
+bk_wall_df = pd.read_csv(path_BK_wall_csv)  
 
 # Clean the 'Image' column in orbit_import_df by stripping extra spaces
 orbit_import_df.columns = orbit_import_df.columns.str.strip()
@@ -32,7 +40,7 @@ def get_xyz_coordinates_base(user_image_name):
     return matched_xyz
 
 # Step 1: Load the 2D points from the BK Hall wall CSV file and convert them to a NumPy array
-points = df[['x', 'y']].values
+points = bk_wall_df[['x', 'y']].values
 
 # Step 2: Find the nearest neighbors for each point using KDTree
 tree = KDTree(points)
