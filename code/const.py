@@ -19,3 +19,7 @@ GROUND_TRUTH_PATH = os.path.join(
 WALL_COORDINATES_PATH = os.path.join(
     program_dir, "data", "csvs", "BK_wall_coordinates.csv"
 )
+
+VALIDATION_FILE_PATH = os.path.join(
+    program_dir, "data", "csvs", "manual_validation.csv"
+)
