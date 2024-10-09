@@ -110,9 +110,11 @@ def main():
     user_images = [
         os.path.join(user_image_dir, filename)
         for filename in [
-            "validation_001.jpg",
             "validation_002.jpg",
-            "validation_003.jpg",
+            "validation_012.png",
+            "validation_022.jpg",
+            "validation_032.jpg",
+            "validation_042.jpg",
         ]
     ]
     images = [
@@ -151,7 +153,7 @@ def main():
     for img in best_matched_images:
         coord = img_data.name2coord(img)  # Get coordinates for each image
         points.append(coord)  # Append to the list of points
-
+        
     scatterplot(points)  # Plot the matched points on the floor plan
 
 

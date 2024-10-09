@@ -2,6 +2,7 @@ import glob
 import os
 import cv2
 import numpy as np
+import time
 from tqdm import tqdm
 
 # import numpy as np
@@ -40,6 +41,7 @@ def training(
         image_name = os.path.basename(image_path)
         image_names = np.append(image_names, image_name)
     # print("image_names: ", image_names)
+    
     vocabulary = dbow.Vocabulary(images, cluster_num, depth)
     print("Vocabulary: ", vocabulary)
 
@@ -64,4 +66,13 @@ def database():
 
 
 if __name__ == "__main__":
+    start_time = time.time()  # Start timing
+
     training(clear_cache=True)
+
+    # Calculate and format elapsed time
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    hours, rem = divmod(elapsed_time, 3600)
+    minutes, seconds = divmod(rem, 60)
+    print(f"Elapsed time: {int(hours):02}:{int(minutes):02}:{int(seconds):02}")  # Print in hh:mm:ss
