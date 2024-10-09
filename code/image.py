@@ -1,85 +1,67 @@
-import glob
 import os
+from typing import Any
 
 import cv2
 import dbow
 import numpy as np
 import training
-from const import IMAGE_NAMES_CACHE_PATH
-from preview import preview
+from const import DATABASE_CACHE_PATH, IMAGE_NAMES_CACHE_PATH
+from preview import preview_mached_images
 
 
-def find_matched_images(
-    image,
-    db: dbow.Database,
-    image_name_index_pairs: list[str],
-    result_num: int = 10,
-) -> list[tuple[str, float]]:
-    orb = cv2.ORB_create()
-    kps, descs = orb.detectAndCompute(image, None)
-    descs = [dbow.ORB.from_cv_descriptor(desc) for desc in descs]
-    scores: list[float] = db.query(descs)
-    top_indices = sorted(
-        range(len(scores)), key=lambda i: scores[i], reverse=True
-    )[:result_num]
+class ImageMatcher:
+    """
+    A class to match images using ORB descriptors and a pre-trained database.
 
-    return [(image_name_index_pairs[i], scores[i]) for i in top_indices]
+    Attributes:
+    -----------
+    db : dbow.Database
+        The database containing ORB descriptors.
+    image_names : np.ndarray
+        An array of image names corresponding to the database entries.
+    orb : Any
+        The ORB detector and descriptor extractor.
 
+    Methods:
+    --------
+    __init__(image_names_path: str = IMAGE_NAMES_CACHE_PATH, db_path: str = DATABASE_CACHE_PATH):
+        Initializes the ImageMatcher with the given image names and database paths.
 
-def main():
-    program_dir = os.getcwd()
-    user_images = glob.glob(
-        os.path.join(program_dir, "data", "user_images", "*.jpg")
-    ) + glob.glob(os.path.join(program_dir, "data", "user_images", "*.png"))
-    images = [cv2.imread(image) for image in user_images]
-    db = training.training()
-    print("db: ", db)
-    if db is None:
-        print("Database not found")
-        return
+    find_matched_images(image_path: str, result_num: int = 5):
+        Finds and returns the top matched images for the given image path.
+    """
 
-    cwd = os.getcwd()
-    image_names = np.load(IMAGE_NAMES_CACHE_PATH)
-    all_images = []
-    for i, image in enumerate(images):
-        matched_images = find_matched_images(image, db, image_names, 3)
-        temp_list: list[tuple[str, float]] = []
-        for match in matched_images:
-            file_name, score = match
-            file_path = os.path.join(cwd, "data", "training", file_name)
-            image_score: tuple[str, float] = [file_path, score]
-            temp_list.append(image_score)
-        all_images.append((image, temp_list))
+    db: dbow.Database
+    images_names: np.ndarray
+    orb: Any
 
-    preview(all_images)
+    def __init__(
+        self,
+        image_names_path: str = IMAGE_NAMES_CACHE_PATH,
+        db_path: str = DATABASE_CACHE_PATH,
+    ):
 
+        self.images_names = np.load(image_names_path)
+        if not os.path.exists(DATABASE_CACHE_PATH):
+            raise ValueError("Database doesn't exist")
+        self.db = training.database(db_path)
+        self.orb = cv2.ORB_create()
 
-def match_user_image(user_image_paths: list[str]):
-    images = [cv2.imread(image) for image in user_image_paths]
-    db = training.training()
-    print("db: ", db)
-    if db is None:
-        print("Database not found")
-        return
+    def find_matched_images(
+        self, image_path: str, result_num: int = 5
+    ) -> list[tuple[str, float]]:
+        image = cv2.imread(image_path)
+        _, descs = self.orb.detectAndCompute(image, None)
+        descs = [dbow.ORB.from_cv_descriptor(desc) for desc in descs]
+        scores: list[float] = self.db.query(descs)
+        top_indices = sorted(
+            range(len(scores)), key=lambda i: scores[i], reverse=True
+        )[:result_num]
 
-    cwd = os.getcwd()
-    image_names = np.load(IMAGE_NAMES_CACHE_PATH)
-    all_images = []
-    for i, image in enumerate(images):
-        matched_images = find_matched_images(image, db, image_names, 3)
-        temp_list: list[tuple[str, float]] = []
-        for match in matched_images:
-            file_name, score = match
-            file_path = os.path.join(cwd, "data", "training", file_name)
-            image_score: tuple[str, float] = (file_path, score)
-            temp_list.append(image_score)
-        all_images.append((image, temp_list))
-
-    preview(all_images)
+        return [(self.images_names[i], scores[i]) for i in top_indices]
 
 
 if __name__ == "__main__":
-    # main()
     user_image_dir = os.path.join(os.getcwd(), "data", "user_images")
     user_images = [
         os.path.join(user_image_dir, filename)
@@ -91,4 +73,19 @@ if __name__ == "__main__":
             "validation_042.jpg",
         ]
     ]
-    match_user_image(user_images)
+    image_matcher = ImageMatcher(IMAGE_NAMES_CACHE_PATH, DATABASE_CACHE_PATH)
+    all_images = [
+        (
+            image,
+            [
+                (
+                    os.path.join(os.getcwd(), "data", "training", matched[0]),
+                    matched[1],
+                )
+                for matched in image_matcher.find_matched_images(image, 3)
+            ],
+        )
+        for image in user_images
+    ]
+
+    preview_mached_images(all_images)
