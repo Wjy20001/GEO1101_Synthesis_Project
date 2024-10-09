@@ -84,9 +84,11 @@ if __name__ == "__main__":
     user_images = [
         os.path.join(user_image_dir, filename)
         for filename in [
-            "validation_001.jpg",
             "validation_002.jpg",
-            "validation_003.jpg",
+            "validation_012.png",
+            "validation_022.jpg",
+            "validation_032.jpg",
+            "validation_042.jpg",
         ]
     ]
     match_user_image(user_images)
