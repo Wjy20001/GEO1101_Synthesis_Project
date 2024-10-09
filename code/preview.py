@@ -1,10 +1,8 @@
-from typing import Any
-from matplotlib import pyplot as plt
 import cv2
-import numpy as np
+from matplotlib import pyplot as plt
 
 
-def preview(images: list[tuple[np.ndarray, list[tuple[str, float]]]]):
+def preview_mached_images(images: list[tuple[str, list[tuple[str, float]]]]):
     num_sets = len(images)
     # We assume each set has 1 user image + N matched images
     num_cols = max(len(matched_images) + 1 for _, matched_images in images)
@@ -15,7 +13,8 @@ def preview(images: list[tuple[np.ndarray, list[tuple[str, float]]]]):
     for set_idx, (user_image, matched_images) in enumerate(images):
         # Plot the user image in the first column of the current row (set_idx)
         plt.subplot(num_sets, num_cols, set_idx * num_cols + 1)
-        plt.imshow(cv2.cvtColor(user_image, cv2.COLOR_BGR2RGB))
+        img = cv2.imread(user_image)
+        plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         plt.title(f"User Image {set_idx+1}")
         plt.axis("off")
 

@@ -1,17 +1,18 @@
-import pandas as pd
 import os
+
 import cv2
 import dbow
-import training
 import numpy as np
+import pandas as pd
+import training
 from const import IMAGE_NAMES_CACHE_PATH
 
 
 def find_matched_images(
-        image,
-        db: dbow.Database,
-        image_name_index_pairs: list[str],
-        result_num: int = 10,
+    image,
+    db: dbow.Database,
+    image_name_index_pairs: list[str],
+    result_num: int = 10,
 ) -> list[tuple[str, float]]:
     orb = cv2.ORB_create()
     kps, descs = orb.detectAndCompute(image, None)
@@ -38,7 +39,9 @@ def match_user_image(user_image_paths: list[str], db):
         for match in matched_images:
             file_name, score = match
             name_list.append(file_name)
-            file_path = os.path.join(os.path.dirname(cwd), "data", "training", file_name)
+            file_path = os.path.join(
+                os.path.dirname(cwd), "data", "training", file_name
+            )
             image_score: tuple[str, float] = (file_path, score)
             temp_list.append(image_score)
 
@@ -57,11 +60,22 @@ def extract_image_mappings(excel_file):
 
     # Iterate through each row in the dataframe
     for index, row in df.iterrows():
-        user_image = row['User image name (image you took)']
+        user_image = row["User image name (image you took)"]
 
         # Gather all ground truth images, ignoring NaN values
-        ground_truth_images = row[['Ground Truth (SLAM) image name', 'Unnamed: 4',
-                                   'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7']].dropna().tolist()
+        ground_truth_images = (
+            row[
+                [
+                    "Ground Truth (SLAM) image name",
+                    "Unnamed: 4",
+                    "Unnamed: 5",
+                    "Unnamed: 6",
+                    "Unnamed: 7",
+                ]
+            ]
+            .dropna()
+            .tolist()
+        )
 
         # Map user image to ground truth images
         image_mappings[user_image] = ground_truth_images
@@ -70,14 +84,14 @@ def extract_image_mappings(excel_file):
 
     for key, value in image_mappings.items():
         cleaned_images = [
-            image.replace('_left', '')
-            .replace('_right', '')
-            .replace('_front', '')
-            .replace('_bottom', '')
-            .replace('_rear', '')
-            .replace('_top', '')
-            .replace('.png', '')
-            .replace('.jpg', '')
+            image.replace("_left", "")
+            .replace("_right", "")
+            .replace("_front", "")
+            .replace("_bottom", "")
+            .replace("_rear", "")
+            .replace("_top", "")
+            .replace(".png", "")
+            .replace(".jpg", "")
             for image in value
         ]
         cleaned_mappings[key] = cleaned_images
@@ -92,7 +106,7 @@ def process_image(user_image):
 
 def main():
     # Path to the Excel file
-    excel_file = './data/user_images/Image_matching_validation_sheet.xlsx'
+    excel_file = "./data/user_images/Image_matching_validation_sheet.xlsx"
 
     # Extract the image mappings
     mappings = extract_image_mappings(excel_file)
@@ -110,7 +124,7 @@ def main():
     user_images = []
 
     for filename in os.listdir(user_image_dir):
-        if filename.lower().endswith(('.jpg', '.png')):
+        if filename.lower().endswith((".jpg", ".png")):
             user_images.append(os.path.join(user_image_dir, filename))
 
     matched_image_set = {}
@@ -121,15 +135,17 @@ def main():
         np_matched_images.append(matched_image)
 
         matched_images = [
-            str(image).replace('_left', '')
-            .replace('_right', '')
-            .replace('_front', '')
-            .replace('_bottom', '')
-            .replace('_rear', '')
-            .replace('_top', '')
-            .replace('.png', '')
-            .replace('.jpg', '')
-            for sublist in np_matched_images for image in sublist
+            str(image)
+            .replace("_left", "")
+            .replace("_right", "")
+            .replace("_front", "")
+            .replace("_bottom", "")
+            .replace("_rear", "")
+            .replace("_top", "")
+            .replace(".png", "")
+            .replace(".jpg", "")
+            for sublist in np_matched_images
+            for image in sublist
         ]
 
         matched_image_set[os.path.basename(image_path)] = matched_images
@@ -154,9 +170,11 @@ def main():
         else:
             count_error += 1
 
-    print(f'Total score: {score}')
-    print(f'Number of successful matches: {count}')
-    print(f'Rate of successful matches: {count/(count + count_error)*100}' + "%")
+    print(f"Total score: {score}")
+    print(f"Number of successful matches: {count}")
+    print(
+        f"Rate of successful matches: {count/(count + count_error)*100}" + "%"
+    )
 
 
 if __name__ == "__main__":
