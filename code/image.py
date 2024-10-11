@@ -52,6 +52,8 @@ class ImageMatcher:
     ) -> list[tuple[str, float]]:
         image = cv2.imread(image_path)
         _, descs = self.orb.detectAndCompute(image, None)
+        if descs is None:
+            return []
         descs = [dbow.ORB.from_cv_descriptor(desc) for desc in descs]
         scores: list[float] = self.db.query(descs)
         top_indices = sorted(
@@ -66,11 +68,11 @@ if __name__ == "__main__":
     user_images = [
         os.path.join(user_image_dir, filename)
         for filename in [
-            "validation_002.jpg",
-            "validation_012.png",
-            "validation_022.jpg",
-            "validation_032.jpg",
-            "validation_042.jpg",
+            "validation_021.jpg",
+            "validation_023.jpg",
+            "validation_025.jpg",
+            "validation_027.jpg",
+            "validation_029.jpg",
         ]
     ]
     image_matcher = ImageMatcher(IMAGE_NAMES_CACHE_PATH, DATABASE_CACHE_PATH)
