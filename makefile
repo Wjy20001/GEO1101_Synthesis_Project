@@ -49,6 +49,11 @@ training:
 	@echo "Running training..."
 	poetry run python code/training.py
 
+.PHONY:image
+image:
+	@echo "Running image..."
+	poetry run python code/image.py
+
 .PHONY: classify
 classify:
 	@echo "Running classification..."

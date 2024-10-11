@@ -157,7 +157,6 @@ if __name__ == "__main__":
 
     wall_coordinates = pd.read_csv(WALL_COORDINATES_PATH)
     points = [coord[:2] for coord in localised_coordinates]
-    print("lenght------", len(points))
     scatterplot(
         [tuple(x) for x in wall_coordinates[["x", "y"]].values], points
     )

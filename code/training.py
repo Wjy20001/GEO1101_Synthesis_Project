@@ -43,8 +43,12 @@ def training(
     np.save(image_name_path, image_names)
 
     db = dbow.Database(vocabulary)
-    for image in tqdm(images, desc="Processing images"):
+    invalid_images = []
+    for i, image in tqdm(enumerate(images), desc="Processing images"):
         _, descs = orb.detectAndCompute(image, None)
+        if descs is None:
+            invalid_images.append(image_paths[i])
+            continue
         descs = [dbow.ORB.from_cv_descriptor(desc) for desc in descs]
         db.add(descs)
     db.save(database_path)

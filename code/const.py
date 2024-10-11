@@ -2,6 +2,10 @@ import os
 
 program_dir = os.getcwd()
 
+# TODO: change this file so we can train subset of training set
+# training_set = "left_only"
+
+
 VOCABULARY_CACHE_PATH = os.path.join(
     program_dir, "data", "cache", "vocabulary.pickle"
 )

@@ -849,19 +849,6 @@ files = [
 ]
 
 [[package]]
-name = "pydbow"
-version = "0.1.2"
-description = "Python Implementation of Bags of Binary Words"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "pydbow-0.1.2.tar.gz", hash = "sha256:31e29c37851690f86ca23deb90aa74b23c3cb35e2489f4297d16772a69e7e31d"},
-]
-
-[package.dependencies]
-numpy = "*"
-
-[[package]]
 name = "pyflakes"
 version = "3.2.0"
 description = "passive checker of Python programs"
@@ -1017,4 +1004,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "31fe0805655124c57c6531f5b31253bf08f55e10361806664c7919590ea5247c"
+content-hash = "c254719a0aa487957e6c627c5a24daf5e8945dfbc3f07ee9ba42742fc7d791d2"
