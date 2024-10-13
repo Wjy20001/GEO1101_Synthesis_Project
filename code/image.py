@@ -84,7 +84,7 @@ if __name__ == "__main__":
                     os.path.join(os.getcwd(), "data", "training", matched[0]),
                     matched[1],
                 )
-                for matched in image_matcher.find_matched_images(image, 3)
+                for matched in image_matcher.find_matched_images(image, 6)
             ],
         )
         for image in user_images
