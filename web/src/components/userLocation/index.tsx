@@ -1,40 +1,34 @@
-import React, { useRef } from "react";
-import * as THREE from "three";
 import { Sphere } from "@react-three/drei";
-import { useSpring, a } from "@react-spring/three";
+import { useSpring, animated } from "@react-spring/three";
 
 type AnimatedPulseProps = {
   color?: string;
-  opacity?: number;
-  position?: [number, number, number];
+  position: [number, number, number];
 };
 
 const AnimatedPulse = ({ color = "#00aaff", position }: AnimatedPulseProps) => {
-  const outerSphereRef = useRef<THREE.Mesh>(null);
-
-  const { scale, opacity } = useSpring({
+  const { scale } = useSpring({
     scale: [1.5, 1.5, 1.5],
-    opacity: 0.2,
     config: { tension: 80, friction: 20 },
     loop: { reverse: true },
-    from: { scale: [1, 1, 1], opacity: 0.4 },
+    from: { scale: [1, 1, 1] },
   });
 
   return (
-    <a.mesh ref={outerSphereRef} scale={scale}>
-      <Sphere args={[0.5, 32, 32]} position={position}>
-        <a.meshBasicMaterial
+    <animated.mesh position={position} scale={scale}>
+      <Sphere args={[0.5, 32, 32]}>
+        <meshBasicMaterial
           attach="material"
           color={color}
-          opacity={opacity}
+          opacity={0.2}
           transparent={true}
         />
       </Sphere>
-    </a.mesh>
+    </animated.mesh>
   );
 };
 
-export type UserLocationPointProps = {
+type UserLocationPointProps = {
   coordinates: [number, number, number];
   innerColor?: string;
   outerColor?: string;
@@ -45,11 +39,9 @@ const UserLocationPoint = ({
   innerColor = "#007bff",
   outerColor = "#00aaff",
 }: UserLocationPointProps) => {
-  const innerSphereRef = useRef<THREE.Mesh>(null);
-
   return (
     <>
-      <mesh ref={innerSphereRef} position={coordinates}>
+      <mesh position={coordinates}>
         <Sphere args={[0.3, 32, 32]}>
           <meshBasicMaterial color={innerColor} />
         </Sphere>

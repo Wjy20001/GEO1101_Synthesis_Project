@@ -13,7 +13,6 @@ const useFloorMap = () => {
 
   const userLocation: [number, number, number] = useMemo(() => {
     if (position.lat && position.lng) {
-      console.log("position", position);
       const { x, y } = projection(position.lng, position.lat);
       return [x, y, 0];
     }
