@@ -1,180 +1,94 @@
 import os
-
-import cv2
-import dbow
-import numpy as np
 import pandas as pd
-import training
-from const import IMAGE_NAMES_CACHE_PATH
+from image import ImageMatcher
+from const import VALIDATION_FILE_PATH, IMAGE_NAMES_CACHE_PATH, DATABASE_CACHE_PATH
 
+def extract_ground_truth_mappings(csv_file):
+    """
+    Extract ground truth mappings from the CSV file.
+    Returns a dictionary where each key is a user image name,
+    and the value is a list of ground truth image names.
+    """
+    df = pd.read_csv(csv_file)
+    
+    # Create a dictionary to store ground truth mappings
+    ground_truth_mappings = {}
 
-def find_matched_images(
-    image,
-    db: dbow.Database,
-    image_name_index_pairs: list[str],
-    result_num: int = 10,
-) -> list[tuple[str, float]]:
-    orb = cv2.ORB_create()
-    kps, descs = orb.detectAndCompute(image, None)
-    descs = [dbow.ORB.from_cv_descriptor(desc) for desc in descs]
-    scores: list[float] = db.query(descs)
-    top_indices = sorted(
-        range(len(scores)), key=lambda i: scores[i], reverse=True
-    )[:result_num]
-
-    return [(image_name_index_pairs[i], scores[i]) for i in top_indices]
-
-
-def match_user_image(user_image_paths: list[str], db):
-    images = [cv2.imread(user_image_paths)]
-    cwd = os.getcwd()
-    image_names = np.load(IMAGE_NAMES_CACHE_PATH)
-    all_images = []
-
-    for i, image in enumerate(images):
-        matched_images = find_matched_images(image, db, image_names, 3)
-        temp_list: list[tuple[str, float]] = []
-        name_list = []
-
-        for match in matched_images:
-            file_name, score = match
-            name_list.append(file_name)
-            file_path = os.path.join(
-                os.path.dirname(cwd), "data", "training", file_name
-            )
-            image_score: tuple[str, float] = (file_path, score)
-            temp_list.append(image_score)
-
-        all_images.append((image, temp_list))
-
-    return name_list
-
-
-def extract_image_mappings(excel_file):
-    # Load the excel file and parse the first sheet
-    xls = pd.ExcelFile(excel_file)
-    df = xls.parse(xls.sheet_names[0])
-
-    # Initialize a dictionary to store image mappings
-    image_mappings = {}
-
-    # Iterate through each row in the dataframe
-    for index, row in df.iterrows():
+    for _, row in df.iterrows():
         user_image = row["User image name (image you took)"]
+        # Get all ground truth image names and ignore NaN values
+        ground_truth_images = row[[
+            "Ground Truth (SLAM) image name",
+            "Unnamed: 4",
+            "Unnamed: 5",
+            "Unnamed: 6",
+            "Unnamed: 7"
+        ]].dropna().tolist()
 
-        # Gather all ground truth images, ignoring NaN values
-        ground_truth_images = (
-            row[
-                [
-                    "Ground Truth (SLAM) image name",
-                    "Unnamed: 4",
-                    "Unnamed: 5",
-                    "Unnamed: 6",
-                    "Unnamed: 7",
-                ]
-            ]
-            .dropna()
-            .tolist()
-        )
+        # Ensure all ground truth images have the ".jpg" extension
+        ground_truth_images = [img + ".jpg" if not img.endswith(".jpg") else img for img in ground_truth_images]
 
-        # Map user image to ground truth images
-        image_mappings[user_image] = ground_truth_images
+        ground_truth_mappings[user_image] = ground_truth_images
 
-    cleaned_mappings = {}
-
-    for key, value in image_mappings.items():
-        cleaned_images = [
-            image.replace("_left", "")
-            .replace("_right", "")
-            .replace("_front", "")
-            .replace("_bottom", "")
-            .replace("_rear", "")
-            .replace("_top", "")
-            .replace(".png", "")
-            .replace(".jpg", "")
-            for image in value
-        ]
-        cleaned_mappings[key] = cleaned_images
-
-    return cleaned_mappings
+    return ground_truth_mappings
 
 
-def process_image(user_image):
-    matches = match_user_image(user_image)
-    return os.path.basename(user_image), matches
+def calculate_score(matched_images, ground_truth_images):
+    """
+    Calculate the score based on how many ground truth images
+    are in the list of matched images.
+    Also returns a list of matched image names.
+    """
+    score = 0
+    matched_image_names = []
+
+    for matched_image, _ in matched_images:
+        matched_image_basename = os.path.basename(matched_image)
+        matched_image_names.append(matched_image_basename)
+        if matched_image_basename in ground_truth_images:
+            score += 1
+
+    return score, matched_image_names
 
 
 def main():
-    # Path to the Excel file
-    excel_file = "./data/user_images/Image_matching_validation_sheet.xlsx"
+    # Load ground truth mappings from the CSV file
+    ground_truth_mappings = extract_ground_truth_mappings(VALIDATION_FILE_PATH)
 
-    # Extract the image mappings
-    mappings = extract_image_mappings(excel_file)
+    # Create an instance of the ImageMatcher
+    image_matcher = ImageMatcher(IMAGE_NAMES_CACHE_PATH, DATABASE_CACHE_PATH)
 
-    # Train the database
-    db = training.training()
-    print("db: ", db)
+    # List of user images to test
+    user_images = [
+        "validation_021.jpg",
+        "validation_023.jpg",
+        "validation_025.jpg",
+        "validation_027.jpg",
+        "validation_029.jpg"
+    ]
 
-    if db is None:
-        print("Database not found")
-        return
-
-    # Test the setup_database
+    # Path to the user images directory
     user_image_dir = os.path.join(os.getcwd(), "data", "user_images")
-    user_images = []
 
-    for filename in os.listdir(user_image_dir):
-        if filename.lower().endswith((".jpg", ".png")):
-            user_images.append(os.path.join(user_image_dir, filename))
+    # Iterate through each user image
+    for user_image_name in user_images:
+        user_image_path = os.path.join(user_image_dir, user_image_name)
 
-    matched_image_set = {}
+        # Find the top n matched images for the current user image
+        matched_images = image_matcher.find_matched_images(user_image_path, result_num=5)
 
-    for image_path in user_images:
-        np_matched_images = []
-        matched_image = match_user_image(image_path, db)
-        np_matched_images.append(matched_image)
+        # Get the ground truth images for the current user image
+        ground_truth_images = ground_truth_mappings.get(user_image_name, [])
 
-        matched_images = [
-            str(image)
-            .replace("_left", "")
-            .replace("_right", "")
-            .replace("_front", "")
-            .replace("_bottom", "")
-            .replace("_rear", "")
-            .replace("_top", "")
-            .replace(".png", "")
-            .replace(".jpg", "")
-            for sublist in np_matched_images
-            for image in sublist
-        ]
+        # Calculate the score based on the matched images
+        score, matched_image_names = calculate_score(matched_images, ground_truth_images)
 
-        matched_image_set[os.path.basename(image_path)] = matched_images
-
-    # print("mappings", mappings)
-    # print("matched_image_set", matched_image_set)
-
-    score = 0
-    count = 0
-    count_error = 0
-    for key in matched_image_set.keys():
-        matched_images = matched_image_set[key]
-        mapped_images = mappings[key]
-
-        # print(matched_images)
-        # print(mapped_images)
-
-        intersection = set(matched_images).intersection(set(mapped_images))
-        if intersection:
-            score += 2
-            count += 1
-        else:
-            count_error += 1
-
-    print(f"Total score: {score}")
-    print(f"Number of successful matches: {count}")
-    print(
-        f"Rate of successful matches: {count/(count + count_error)*100}" + "%"
-    )
+        # Print the detailed result
+        print(f"Input image: {user_image_name}")
+        print(f"Matched images: {', '.join(matched_image_names)}")
+        print(f"Ground Truth images: {', '.join(ground_truth_images)}")
+        print(f"Score: {score} points")
+        print("-" * 50)
 
 
 if __name__ == "__main__":
