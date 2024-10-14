@@ -28,6 +28,4 @@ VALIDATION_FILE_PATH = os.path.join(
     program_dir, "data", "csvs", "manual_validation.csv"
 )
 
-API_FOLDER_PATH = os.path.join(
-    program_dir, "API"
-)
+API_FOLDER_PATH = os.path.join(program_dir, "API")
