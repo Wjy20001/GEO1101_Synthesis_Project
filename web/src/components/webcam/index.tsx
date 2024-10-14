@@ -1,6 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { Container } from '@mantine/core';
+import { useCallback, useRef, useState } from 'react';
 
-import WebcamComp from "react-webcam";
+import WebcamComp from 'react-webcam';
+
+type WebcamProps = {
+  onCapture: (imageSrc: string) => void;
+};
 
 const Webcam = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -12,16 +17,18 @@ const Webcam = () => {
   }, [webcamRef]);
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
+    <Container style={{ width: '100vw', height: '100vh', padding: 0 }}>
       <WebcamComp
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
-        width="100%"
-        height="100%"
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        // videoConstraints={{
+        //   facingMode: "environment",
+        // }}
         onUserMediaError={(error) => console.error(error)}
       />
-    </div>
+    </Container>
   );
 };
 
