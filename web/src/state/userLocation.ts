@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 type UserLocation = {
   position: {
@@ -8,9 +8,19 @@ type UserLocation = {
   setLocation: (position: { lat: number; lng: number }) => void;
 };
 
+type Loading = {
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+};
+
 const useUserLocation = create<UserLocation>((set) => ({
   position: { lat: 0, lng: 0 },
-  setLocation: ({ lat, lng }) => set(() => ({ position: { lat, lng } })),
+  setLocation: (position) => set(() => ({ position })),
 }));
 
-export { useUserLocation };
+const useLoading = create<Loading>((set) => ({
+  loading: false,
+  setLoading: (loading) => set(() => ({ loading })),
+}));
+
+export { useUserLocation, useLoading };
