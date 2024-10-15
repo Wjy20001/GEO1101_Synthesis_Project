@@ -3,33 +3,44 @@ import {
   Container,
   Stack,
   Text,
-  RingProgress,
-  Center,
   Overlay,
   ActionIcon,
   Transition,
+  useMantineTheme,
+  LoadingOverlay,
+  Box,
 } from '@mantine/core';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { IconCamera, IconCheck } from '@tabler/icons-react';
 import { useCallback, useRef, useState } from 'react';
 import WebcamComp from 'react-webcam';
+import { useLoading, useUserLocation } from '../../state/userLocation';
+// import Lottie from 'lottie-react';
+// import cameraAnimation from '../../assets/camera-animation.json';
+import { uploadPhotos } from '../../api';
+
+type CameraProps = {
+  onToggleMode: () => void;
+};
 
 const instructions = [
-  'Please take a photo of your surroundings.',
   'Please take a photo of your environment on the right-hand side.',
-  'Please take a photo of your environment behind you.',
+  'Please take a photo of your environment on the front.',
   'Please take a photo of your environment on the left-hand side.',
+  'Please take a photo of your environment on the above.',
 ];
 
-const Camera: React.FC = () => {
+const Camera = ({ onToggleMode }: CameraProps) => {
   const [photos, setPhotos] = useState<File[]>([]);
   const [finished, setFinished] = useState(false);
-
+  const theme = useMantineTheme();
   const webcamRef = useRef<WebcamComp | null>(null);
+  const setUserLocation = useUserLocation((state) => state.setLocation);
+  const loading = useLoading((state) => state.loading);
+  const setLoading = useLoading((state) => state.setLoading);
 
   const capture = useCallback(() => {
-    console.log('capture');
     const imageSrc = webcamRef.current?.getScreenshot();
     if (!imageSrc) return;
 
@@ -50,28 +61,42 @@ const Camera: React.FC = () => {
       });
   }, [photos.length]);
 
-  const handleSubmit = () => {
-    const formData = new FormData();
-    photos.forEach((photo) => {
-      formData.append('photos', photo);
-    });
+  const handleSubmit = async () => {
+    setLoading(true);
 
-    // Send formData to the server
-    fetch('/upload', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((response) => {
-        // Handle the server response
-      })
-      .catch((error) => {
-        // Handle errors
-      });
+    try {
+      const data = await uploadPhotos(photos);
+      setUserLocation({ lat: data.lat, lng: data.lng });
+      onToggleMode();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <Container size="sm" m={0} p={0}>
-      {/* Camera and Progress Ring */}
+  return loading ? (
+    <Box
+      pos="relative"
+      style={{
+        width: '100vw',
+        height: '100vh',
+        background: theme.colors.dark[6],
+      }}
+    >
+      <LoadingOverlay
+        visible={true}
+        zIndex={1000}
+        overlayProps={{ radius: 'sm', blur: 2 }}
+      />
+    </Box>
+  ) : (
+    <Container
+      size="sm"
+      m={0}
+      p={0}
+      style={{ backgroundColor: theme.colors.dark[6], height: '100vh' }}
+    >
       <Transition
         mounted={!finished}
         transition="fade"
@@ -85,6 +110,9 @@ const Camera: React.FC = () => {
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
+                videoConstraints={{
+                  facingMode: 'environment',
+                }}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 onUserMediaError={(error) => console.error(error)}
               />
@@ -100,21 +128,33 @@ const Camera: React.FC = () => {
                     height: '100vh',
                     width: '100vw',
                     position: 'fixed',
+                    padding: '50px',
                     top: 0,
                     left: 0,
                   }}
                 >
-                  <CircularProgressbar
-                    value={(photos.length / 4) * 100}
-                    text={`${photos.length}/4`}
-                    styles={buildStyles({
-                      pathColor: 'teal',
-                      textColor: 'teal',
-                      trailColor: '#d6d6d6',
-                    })}
-                    strokeWidth={10}
-                    animate={true}
-                  />
+                  <Stack
+                    align="center"
+                    justify="center"
+                    style={{ height: '100vh', width: '100vw' }}
+                  >
+                    <Text size="xl" style={{ color: theme.colors.dark[0] }}>
+                      {instructions[photos.length]}
+                    </Text>
+                    {/* <Lottie animationData={cameraAnimation} loop={true} /> */}
+                    <Container size={200}>
+                      <CircularProgressbar
+                        value={(photos.length / 4) * 100}
+                        text={`${photos.length}/4`}
+                        styles={buildStyles({
+                          pathColor: theme.primaryColor,
+                          textColor: theme.primaryColor,
+                          trailColor: '#d6d6d6',
+                        })}
+                        strokeWidth={8}
+                      />
+                    </Container>
+                  </Stack>
                 </div>
                 {/* Capture Button */}
                 <div
@@ -156,15 +196,24 @@ const Camera: React.FC = () => {
         timingFunction="ease"
       >
         {(styles) => (
-          <div style={{ ...styles, position: 'relative', height: '100vh' }}>
-            <Stack align="center" justify="center" style={{ height: '100%' }}>
-              <ActionIcon color="teal" radius="xl" size={100}>
-                <IconCheck size={80} />
-              </ActionIcon>
-              <Text size="xl">Thank you! All photos have been taken.</Text>
-              <Button onClick={handleSubmit}>Submit Photos</Button>
-            </Stack>
-          </div>
+          <Stack
+            align="center"
+            justify="center"
+            style={{
+              height: '100%',
+              width: '100%',
+              backgroundColor: theme.colors.dark[6],
+            }}
+          >
+            <ActionIcon color={theme.primaryColor} radius="xl" size={70}>
+              <IconCheck size={50} />
+            </ActionIcon>
+
+            <Text size="xl" style={{ color: theme.colors.dark[0] }}>
+              Thank you! All photos have been taken.
+            </Text>
+            <Button onClick={handleSubmit}>Localise your position</Button>
+          </Stack>
         )}
       </Transition>
     </Container>

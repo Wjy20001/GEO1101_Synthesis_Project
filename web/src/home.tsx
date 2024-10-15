@@ -42,7 +42,9 @@ const Page = () => {
       </div>
     </>
   ) : (
-    <Camera />
+    <Container style={{ width: '100%', height: '100%' }} m={0} p={0}>
+      <Camera onToggleMode={handleToggleMode} />
+    </Container>
   );
 };
 

@@ -1,17 +1,12 @@
-import React from "react";
-import { MantineProvider } from "@mantine/core";
-
-const theme = {
-  fontFamily: "Arial, sans-serif",
-  colorScheme: "light",
-};
+import React from 'react';
+import { MantineProvider, DEFAULT_THEME } from '@mantine/core';
 
 type AppProviderProps = {
   children: React.ReactNode;
 };
 
 const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  return <MantineProvider theme={theme}>{children}</MantineProvider>;
+  return <MantineProvider theme={DEFAULT_THEME}>{children}</MantineProvider>;
 };
 
 export default AppProvider;
