@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    paths:
+      - "API/**"
+      - "code/**"
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "::add-path::${HOME}/.poetry/bin"
+
+      - name: Install dependencies
+        run: poetry install
+
+      # - name: Run tests
+      #   run: poetry run pytest
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
+      - name: Deploy to Google Cloud Function
+        run: |
+          gcloud functions deploy my-function \
+            --runtime python311 \
+            --trigger-http \
+            --allow-unauthenticated \
+            --entry-point main \
+            --source ./API
