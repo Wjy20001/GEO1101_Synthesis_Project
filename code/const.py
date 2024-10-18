@@ -28,6 +28,14 @@ VALIDATION_FILE_PATH = os.path.join(
     program_dir, "data", "csvs", "manual_validation.csv"
 )
 
+BUILDING_EDGE_PATH = os.path.join(
+    program_dir, "data", "routing", "boundary.geojson"
+)
+
+NODES_PATH = os.path.join(
+    program_dir, "data", "routing", "nodes.geojson"
+)
+
 API_FOLDER_PATH = os.path.join(
     program_dir, "API"
 )
