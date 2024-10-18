@@ -1,0 +1,27 @@
+{
+"type": "FeatureCollection",
+"name": "nodes",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::28992" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 0, "label": "Entrance", "neighbors": "1", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85192.850026116328081, 446861.645483727334067 ] } },
+{ "type": "Feature", "properties": { "id": 1, "label": "Service Desk", "neighbors": "0, 2", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85196.412357703200541, 446858.422421815397684 ] } },
+{ "type": "Feature", "properties": { "id": 2, "label": "Center", "neighbors": "1, 3", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85200.992498314881232, 446858.931326327787247 ] } },
+{ "type": "Feature", "properties": { "id": 3, "label": "Waltman’s Bouwshop", "neighbors": "2, 4", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85206.449085586835281, 446864.218278762302361 ] } },
+{ "type": "Feature", "properties": { "id": 4, "label": "Printshop", "neighbors": "3, 5", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85213.913018435516278, 446873.435104931471869 ] } },
+{ "type": "Feature", "properties": { "id": 5, "label": "Disabled elevator", "neighbors": "4, 6", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85220.981136663423968, 446881.916846804961096 ] } },
+{ "type": "Feature", "properties": { "id": 6, "label": "Staircase", "neighbors": "5, 7", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85225.674367166750017, 446888.080245899676811 ] } },
+{ "type": "Feature", "properties": { "id": 7, "label": "Corridor A", "neighbors": "6, 8, 9", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85219.341333234551712, 446893.508560698712245 ] } },
+{ "type": "Feature", "properties": { "id": 8, "label": "Vending machine", "neighbors": "7", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85214.506740366661688, 446887.656158805999439 ] } },
+{ "type": "Feature", "properties": { "id": 9, "label": "Corridor B", "neighbors": "7, 10, 11", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85211.76431049425446, 446899.389235064387321 ] } },
+{ "type": "Feature", "properties": { "id": 10, "label": "Lecture room P", "neighbors": "9", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85207.495167084605782, 446894.07401015702635 ] } },
+{ "type": "Feature", "properties": { "id": 11, "label": "Corridor C", "neighbors": "9, 12, 13, 14", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85202.773664108361118, 446906.853167913039215 ] } },
+{ "type": "Feature", "properties": { "id": 12, "label": "Lecture room Q", "neighbors": "11", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85198.674155536165927, 446900.774586237035692 ] } },
+{ "type": "Feature", "properties": { "id": 13, "label": "Lecture room B", "neighbors": "11", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85194.94218911183998, 446912.027030455821659 ] } },
+{ "type": "Feature", "properties": { "id": 14, "label": "Corridor D", "neighbors": "11, 15, 16", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85214.874282514516381, 446921.653807482449338 ] } },
+{ "type": "Feature", "properties": { "id": 15, "label": "Lecture room D", "neighbors": "14", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85209.898327282076934, 446925.894678419223055 ] } },
+{ "type": "Feature", "properties": { "id": 16, "label": "Corridor E", "neighbors": "14, 17, 18", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85230.247439660321106, 446939.875416274473537 ] } },
+{ "type": "Feature", "properties": { "id": 17, "label": "Lecture room R", "neighbors": "16", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85225.497664211172378, 446944.738281615253072 ] } },
+{ "type": "Feature", "properties": { "id": 18, "label": "Msc-student association", "neighbors": "16, 19", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85243.931316549540497, 446956.329995509062428 ] } },
+{ "type": "Feature", "properties": { "id": 19, "label": "Geolab", "neighbors": "18", "weights": null }, "geometry": { "type": "Point", "coordinates": [ 85258.124097951193107, 446971.71022077294765 ] } }
+]
+}
