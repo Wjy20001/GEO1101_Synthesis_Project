@@ -16,8 +16,6 @@ import { IconCamera, IconCheck } from '@tabler/icons-react';
 import { useCallback, useRef, useState } from 'react';
 import WebcamComp from 'react-webcam';
 import { useLoading, useUserLocation } from '../../state/userLocation';
-// import Lottie from 'lottie-react';
-// import cameraAnimation from '../../assets/camera-animation.json';
 import { uploadPhotos } from '../../api';
 
 type CameraProps = {
@@ -141,7 +139,6 @@ const Camera = ({ onToggleMode }: CameraProps) => {
                     <Text size="xl" style={{ color: theme.colors.dark[0] }}>
                       {instructions[photos.length]}
                     </Text>
-                    {/* <Lottie animationData={cameraAnimation} loop={true} /> */}
                     <Container size={200}>
                       <CircularProgressbar
                         value={(photos.length / 4) * 100}

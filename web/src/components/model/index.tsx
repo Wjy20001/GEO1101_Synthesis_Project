@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
-import { useGLTF } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { useGLTF } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
 
 type ModelProps = {
   url: string;
@@ -12,7 +12,7 @@ type ModelProps = {
 
 const Model = ({
   url,
-  color = "#0D0D0D",
+  color = '#0D0D0D',
   opacity = 0.8,
   onModelOffest,
 }: ModelProps) => {

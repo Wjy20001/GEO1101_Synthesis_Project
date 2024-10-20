@@ -1,5 +1,5 @@
-import React from "react";
-import { Text } from "@react-three/drei";
+import React from 'react';
+import { Text } from '@react-three/drei';
 
 export type AxisHelperProps = {
   label?: boolean;

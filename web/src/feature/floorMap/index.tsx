@@ -1,16 +1,17 @@
-import useHooks from "./hooks";
-import IndoorMap from "../../components/indoorMap";
-import floorMapUrl from "../../assets/bk.gltf";
+import useHooks from './hooks';
+import MapLibre from '../../components/maplibre';
+
 export type FloorMapProps = {};
 
 const FloorMap = ({}: FloorMapProps) => {
-  const { userLocation } = useHooks();
+  const { userLocation, camera, maxBounds } = useHooks();
 
   return (
-    <IndoorMap
-      floorMapUrl={floorMapUrl}
+    <MapLibre
+      initialCamerea={camera}
+      maxBounds={maxBounds}
       userLocation={userLocation}
-    ></IndoorMap>
+    ></MapLibre>
   );
 };
 

@@ -1,22 +1,43 @@
 import { create } from 'zustand';
 
-type UserLocation = {
-  position: {
-    lat: number;
-    lng: number;
-  };
-  setLocation: (position: { lat: number; lng: number }) => void;
-};
+interface Position {
+  lat: number;
+  lng: number;
+}
+
+interface UserLocation {
+  position: Position;
+  setLocation: (position: Position) => void;
+}
 
 type Loading = {
   loading: boolean;
   setLoading: (loading: boolean) => void;
 };
 
-const useUserLocation = create<UserLocation>((set) => ({
-  position: { lat: 0, lng: 0 },
-  setLocation: (position) => set(() => ({ position })),
-}));
+const useUserLocation = create<UserLocation>((set) => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        set({ position: { lat: latitude, lng: longitude } });
+        console.log('User location:', { lat: latitude, lng: longitude });
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        // Optionally handle the error or keep the default position
+      }
+    );
+  } else {
+    console.warn('Geolocation is not supported by this browser.');
+  }
+
+  // Set the default position
+  return {
+    position: { lat: 52.005668180596146, lng: 4.37070135981498 },
+    setLocation: (position) => set({ position }),
+  };
+});
 
 const useLoading = create<Loading>((set) => ({
   loading: false,

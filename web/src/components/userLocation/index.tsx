@@ -1,12 +1,12 @@
-import { Sphere } from "@react-three/drei";
-import { useSpring, animated } from "@react-spring/three";
+import { Sphere } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/three';
 
 type AnimatedPulseProps = {
   color?: string;
   position: [number, number, number];
 };
 
-const AnimatedPulse = ({ color = "#00aaff", position }: AnimatedPulseProps) => {
+const AnimatedPulse = ({ color = '#00aaff', position }: AnimatedPulseProps) => {
   const { scale } = useSpring({
     scale: [1.5, 1.5, 1.5],
     config: { tension: 80, friction: 20 },
@@ -36,8 +36,8 @@ type UserLocationPointProps = {
 
 const UserLocationPoint = ({
   coordinates,
-  innerColor = "#007bff",
-  outerColor = "#00aaff",
+  innerColor = '#007bff',
+  outerColor = '#00aaff',
 }: UserLocationPointProps) => {
   return (
     <>
