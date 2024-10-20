@@ -1,25 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
-import useGeolocation from "../../hooks/geolocation";
-import { useUserLocation } from "../../state/userLocation";
-import projection from "../../utils/proj";
+import { useMemo } from 'react';
+import { useUserLocation } from '../../state/userLocation';
+import { Camerea, UserLocation } from '../../components/maplibre';
 
 const useFloorMap = () => {
-  // const { position, setLocation } = useUserLocation();
-  // const { error } = useGeolocation({ setLocation });
-  const [position, setPosition] = useState({ lat: 0, lng: 0 });
-  useEffect(() => {
-    setPosition({ lat: 52.00569074902927, lng: 4.370753588519562 });
-  }, []);
+  const { position } = useUserLocation();
+  const userLocation: UserLocation = useMemo(
+    () => ({
+      longitude: position.lng,
+      latitude: position.lat,
+      heading: 0,
+    }),
+    [position]
+  );
+  const camera: Camerea = {
+    center: [4.370632073495202, 52.005614398576945],
+    zoom: 17,
+    pitch: 0,
+    bearing: 0,
+  };
 
-  const userLocation: [number, number, number] = useMemo(() => {
-    if (position.lat && position.lng) {
-      const { x, y } = projection(position.lng, position.lat);
-      return [x, y, 0];
-    }
-    return [0, 0, 0];
-  }, [position]);
+  const maxBounds: [[number, number], [number, number]] = [
+    [4.367417989524314, 52.00093467046407],
+    [4.475395988362235, 52.00736618403458],
+  ];
 
-  return { userLocation };
+  return { userLocation, camera, maxBounds };
 };
 
 export default useFloorMap;

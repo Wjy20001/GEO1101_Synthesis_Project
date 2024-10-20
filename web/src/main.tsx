@@ -1,8 +1,8 @@
-import "./main.css";
+import './main.css';
 
-import AppProvider from "./provider";
+import AppProvider from './provider';
 
-import Page from "./home";
+import Page from './home';
 
 export function Main() {
   return (
