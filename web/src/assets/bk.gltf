@@ -4,16 +4,8 @@
       "name": "Node-Mesh_0_positions",
       "componentType": 5126,
       "count": 2108,
-      "min": [
-        85103.4375,
-        446740.03125,
-        -1.0839999914169312
-      ],
-      "max": [
-        85267.7734375,
-        446983.46875,
-        52.15700149536133
-      ],
+      "min": [85103.4375, 446740.03125, -1.0839999914169312],
+      "max": [85267.7734375, 446983.46875, 52.15700149536133],
       "type": "VEC3",
       "bufferView": 0,
       "byteOffset": 0
@@ -22,12 +14,8 @@
       "name": "Node-Mesh_0_indices",
       "componentType": 5123,
       "count": 12615,
-      "min": [
-        0
-      ],
-      "max": [
-        2107
-      ],
+      "min": [0],
+      "max": [2107],
       "type": "SCALAR",
       "bufferView": 1,
       "byteOffset": 0
@@ -65,20 +53,11 @@
     {
       "name": "default",
       "pbrMetallicRoughness": {
-        "baseColorFactor": [
-          0.5,
-          0.5,
-          0.5,
-          1
-        ],
+        "baseColorFactor": [0.5, 0.5, 0.5, 1],
         "metallicFactor": 0,
         "roughnessFactor": 1
       },
-      "emissiveFactor": [
-        0,
-        0,
-        0
-      ],
+      "emissiveFactor": [0, 0, 0],
       "alphaMode": "OPAQUE",
       "doubleSided": false
     }
@@ -107,9 +86,7 @@
   "scene": 0,
   "scenes": [
     {
-      "nodes": [
-        0
-      ]
+      "nodes": [0]
     }
   ]
 }

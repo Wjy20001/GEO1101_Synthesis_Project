@@ -1,3 +1,3 @@
-import * as userLocation from "./userLocation";
+import * as userLocation from './userLocation';
 
 export { userLocation };

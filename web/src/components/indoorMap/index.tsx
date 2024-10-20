@@ -1,9 +1,9 @@
-import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import React, { Suspense, useEffect, useMemo, useState } from "react";
-import UserLocationPoint from "../userLocation";
-import Model from "../model";
-import AxisHelper from "../axisHelper";
+import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import UserLocationPoint from '../userLocation';
+import Model from '../model';
+import AxisHelper from '../axisHelper';
 
 export type FloorMapProps = {
   floorMapUrl: string;
@@ -17,7 +17,7 @@ export type FloorMapProps = {
 const IndoorMap = ({
   floorMapUrl: floormapUrl,
   userLocation,
-  bgColor = "#2F2F2F",
+  bgColor = '#2F2F2F',
   cameraFov = 90,
   // cameraPose = [-2, 0, -3],
   cameraPosition = [-2, 2, -3],
@@ -37,7 +37,7 @@ const IndoorMap = ({
   return (
     <div
       id="canvas-container"
-      style={{ width: "100vw", height: "100vh", margin: "0" }}
+      style={{ width: '100vw', height: '100vh', margin: '0' }}
     >
       <Canvas
         gl={{ antialias: true }}
