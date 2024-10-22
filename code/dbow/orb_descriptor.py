@@ -46,6 +46,26 @@ class ORB:
         return np.allclose(self.features, other.features)
 
 
+class SIFT:
+    def __init__(self, features):
+        self.features = np.array(features).astype("float32")
+
+    def distance(self, other):
+        """Calculate Euclidean distance between two descriptors."""
+        return np.linalg.norm(self.features - other.features)
+
+    @classmethod
+    def from_cv_descriptor(cls, cv_descriptor):
+        return cls(cv_descriptor)
+
+    def __add__(self, other):
+        return SIFT(self.features + other.features)
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+
+
 def mean_value(descriptors):
     """Calculate mean of list of ORB Descriptors."""
     N2 = len(descriptors) / 2
