@@ -1,14 +1,16 @@
 import pandas as pd
 import os
+import convertcoordinate as cc
+from pyproj import Transformer
 
-from point_in_polygon import point_in_polygon  # Assuming you need this function later
+from point_in_polygon import point_in_polygon 
 
-def get_room_name(img_name: str) -> str:
+def get_room_name(img_name: str, floorplan_json_path: str) -> str:
     img_full_path: str = os.path.join(user_image_folder, img_name)
     
-    img_coordinate: tuple[float, float] = (4.0, 4.0) #replace by function 
+    img_coordinate: tuple[float, float] = (4.0, 4.0) #replace by image matching function
 
-    room: str = point_in_polygon(*img_coordinate, floorplan_json_path)
+    room: str = point_in_polygon(img_coordinate, floorplan_json_path)
 
     return room if room else ''
 
@@ -30,15 +32,17 @@ def print_statistics(df: pd.DataFrame) -> None:
 
 if __name__ == "__main__":
     #define paths
-    csv_path: str = os.path.join("data", "room_validation", "room_validation_linkage.csv")
-    user_image_folder: str = os.path.join("data", "room_validation", "user_images")
-    floorplan_json_path: str = os.path.join("data", "room_validation", "test_floorplan.geojson")
+    room_val_folder: str = os.path.join("data", "room_validation")
 
+    csv_path: str = os.path.join(room_val_folder, "room_validation_linkage.csv")
+    user_image_folder: str = os.path.join(room_val_folder, "user_images")
+    rooms_json_path: str = os.path.join(room_val_folder, "test_floorplan_latlong.geojson")
+    
     # get validation data as dataframe
     df: pd.DataFrame = pd.read_csv(csv_path, dtype=pd.StringDtype())
 
     # Apply the function to the 'user_image_name' column
-    df['found_room'] = df['user_image_name'].apply(get_room_name)
+    df['found_room'] = df['user_image_name'].apply(lambda x: get_room_name(x, rooms_json_path))
     df['found_room'] = df['found_room'].astype(pd.StringDtype())
 
     print_statistics(df)

@@ -1,19 +1,21 @@
 import json
 from pyproj import Transformer
+import os
 
+#define standard CRS transformer 28992 -> 4326
+CRS28992_4326 = Transformer.from_crs("EPSG:28992", "EPSG:4326", always_xy=True)
 
 # Function to convert coordinates from EPSG:28992 to WGS84 using Transformer
-def convert_coordinates(coordinates, transformer):
+def convert_coordinates(coordinates, transformer=CRS28992_4326):
     if isinstance(coordinates[0], list):  # Check if it's a list of coordinates (for LineString or Polygon)
         return [convert_coordinates(coord, transformer) for coord in coordinates]
     else:  # If it's a single point
         # Transform the coordinates from EPSG:28992 (x, y) to EPSG:4326 (longitude, latitude)
-        return list(
-            transformer.transform(coordinates[0], coordinates[1]))  # Use (x, y) order for EPSG:28992 to EPSG:4326
+        return list(transformer.transform(coordinates[0], coordinates[1]))  # Use (x, y) order for EPSG:28992 to EPSG:4326
 
 
 # Function to convert GeoJSON geometry
-def convert_geometry(geometry, transformer):
+def convert_geometry(geometry, transformer=CRS28992_4326):
     geom_type = geometry['type']
     if geom_type == 'Point':
         geometry['coordinates'] = convert_coordinates(geometry['coordinates'], transformer)
@@ -28,7 +30,7 @@ def convert_geometry(geometry, transformer):
 
 
 # Function to process the entire GeoJSON feature collection and update the CRS
-def convert_geojson(geojson_data, transformer):
+def convert_geojson(geojson_data, transformer=CRS28992_4326):
     # Update the CRS to EPSG:4326 (WGS84)
     geojson_data['crs'] = {
         "type": "name",
@@ -44,9 +46,7 @@ def convert_geojson(geojson_data, transformer):
 
 
 # Main part of the code
-def convert_geojson_epsg28992_to_latlong(input_geojson_path, output_geojson_path):
-    # Define the transformer from EPSG:28992 to WGS84 (EPSG:4326)
-    transformer = Transformer.from_crs("EPSG:28992", "EPSG:4326", always_xy=True)
+def convert_geojson_epsg28992_to_latlong(input_geojson_path, output_geojson_path, transformer=CRS28992_4326):
 
     # Read input GeoJSON
     with open(input_geojson_path, 'r') as f:
@@ -60,10 +60,13 @@ def convert_geojson_epsg28992_to_latlong(input_geojson_path, output_geojson_path
         json.dump(converted_geojson, f, indent=2)
 
 
-# Example usage:
-input_geojson = r'D:\geomatics\geo1101\convertcoordinate\data\pointxy.geojson'  # Path to your input GeoJSON file
-output_geojson = r'D:\geomatics\geo1101\convertcoordinate\data\pointlatlon.geojson'  # Path to your output GeoJSON file
+if __name__ == "__main__":
+    folder_path = os.path.join("data", "room_validation")
 
-convert_geojson_epsg28992_to_latlong(input_geojson, output_geojson)
+    # Example usage:
+    input_geojson = os.path.join(folder_path, "test_floorplan.geojson")
+    output_geojson = os.path.join(folder_path, "test_floorplan_latlong.geojson")
 
-print(f"Converted GeoJSON has been saved to {output_geojson}")
+    convert_geojson_epsg28992_to_latlong(input_geojson, output_geojson)
+
+    print(f"Converted GeoJSON has been saved to {output_geojson}")
