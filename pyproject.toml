@@ -18,6 +18,7 @@ fastapi = "^0.115.2"
 uvicorn = "^0.31.1"
 python-multipart = "^0.0.12"
 shapely = "^2.0.6"
+pyproj = "^3.7.0"
 
 
 [tool.poetry.group.dev.dependencies]
