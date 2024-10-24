@@ -5,10 +5,18 @@ from pyproj import Transformer
 
 from point_in_polygon import point_in_polygon 
 
+
 def get_room_name(img_name: str, floorplan_json_path: str) -> str:
     img_full_path: str = os.path.join(user_image_folder, img_name)
     
     img_coordinate: tuple[float, float] = (4.0, 4.0) #replace by image matching function
+
+    #get coordinate using CNN
+    ####
+    ####
+    ####
+    # coordinate = functiontouse(input 1, input 2)
+
 
     room: str = point_in_polygon(img_coordinate, floorplan_json_path)
 

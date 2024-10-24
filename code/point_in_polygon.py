@@ -24,12 +24,13 @@ def point_in_polygon(point: tuple[float, float], geojson_file_path:str):
 
     # Create a Shapely Point object for the input coordinates
     point = Point(x, y)
-
+    
     # Iterate over the features (polygons) in the GeoJSON file
     for feature in data['features']:
         if 'geometry' not in feature or not feature['geometry']:
             continue  # Skip invalid geometries
 
+        geometry = shape(feature['geometry'])
         geometry = shape(feature['geometry'])
         
         # Check if the point is within the polygon

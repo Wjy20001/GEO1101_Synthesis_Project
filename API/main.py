@@ -90,6 +90,26 @@ async def upload_images(files: List[UploadFile] = File(...)):
     return JSONResponse(content={"user coordinates": user_position})
 
 
+@app.post("/localize/")
+async def run_scripts():
+    """
+    Endpoint to trigger the execution of script1.py and script2.py.
+    """
+    try:
+        # Run script1.py
+        subprocess.run(["python", "path/to/script1.py"], check=True)
+        # Run script2.py
+        subprocess.run(["python", "path/to/script2.py"], check=True)
+
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error running scripts: {str(e)}"
+        )
+
+    return JSONResponse(content={"message": "Scripts executed successfully"})
+
+
+
 if __name__ == "__main__":
     # Run the FastAPI app using Uvicorn when executed as a script
     import uvicorn
