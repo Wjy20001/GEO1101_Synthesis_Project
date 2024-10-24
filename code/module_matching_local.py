@@ -7,7 +7,7 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 import pandas as pd
 from sklearn.cluster import DBSCAN
-from const import USER_IMAGE_PATH, CACHE_PATH, GROUND_TRUTH_COORDINATES_PATH, WALL_COORDINATES_PATH
+# from const import USER_IMAGE_PATH, CACHE_PATH, GROUND_TRUTH_COORDINATES_PATH, WALL_COORDINATES_PATH
 from PIL import Image
 
 # Extract image features using the VGG16 model
@@ -64,7 +64,7 @@ def apply_dbscan_and_find_center(all_coords, eps=0.5, min_samples=3):
             label_coords = np.array(label_coords)
             largest_cluster_center = np.mean(label_coords, axis=0)
 
-    return largest_cluster_center
+    return tuple(largest_cluster_center)
 
 # Load preprocessed reference data and match query images
 def match_query_images_and_get_center(query_image_paths, reference_data_file, csv_path, top_n_matches=6):
@@ -112,47 +112,21 @@ def match_query_images_and_get_center(query_image_paths, reference_data_file, cs
     largest_cluster_center = apply_dbscan_and_find_center(all_coords)
     return largest_cluster_center
 
-# Optional visualization functions, uncomment if needed
-# def plot_dbscan_results_with_wall(all_coords, labels, wall_coords):
-#     plt.figure(figsize=(8, 8))
-#     unique_labels = set(labels)
 
-#     # Plot wall coordinates as background
-#     wall_coords = np.array(wall_coords)
-#     plt.scatter(wall_coords[:, 0], wall_coords[:, 1], c='gray', label='Wall', s=5, alpha=0.5)  # Gray wall coordinates
-
-#     # Plot DBSCAN results
-#     for label in unique_labels:
-#         label_coords = [all_coords[i] for i in range(len(all_coords)) if labels[i] == label]
-#         label_coords = np.array(label_coords)
-#         if label == -1:
-#             plt.scatter(label_coords[:, 0], label_coords[:, 1], c='red', label='Outliers', s=20)  # Adjust s to change point size
-#         else:
-#             plt.scatter(label_coords[:, 0], label_coords[:, 1], label=f'Cluster {label}', s=20)  # Adjust s to change point size
-
-#     plt.title('DBSCAN Clustering Results with Wall Coordinates')
-#     plt.xlabel('X')
-#     plt.ylabel('Y')
-#     plt.legend()
-#     plt.grid(True)
-#     plt.show()
-
-# Main program
 if __name__ == "__main__":
     # Use paths defined in const.py
-    reference_data_file = os.path.join(CACHE_PATH, 'reference_vgg16_data.pkl')
-    csv_path = GROUND_TRUTH_COORDINATES_PATH  # CSV file with ground truth coordinates
+    reference_data_file = os.path.join("data", "training", 'reference_vgg16_data.pkl')
+    csv_path = os.path.join("data", "csvs", "slam_camera_coordinates_merged.csv")
 
+    user_image_folder = os.path.join("data", "user_images")
     # Specify the query images
-    selected_query_images = [
-        os.path.join(USER_IMAGE_PATH, 'p000061_front.jpg'),
-        os.path.join(USER_IMAGE_PATH, 'p000061_left.jpg'),
-        os.path.join(USER_IMAGE_PATH, 'p000061_top.jpg'),
-        os.path.join(USER_IMAGE_PATH, 'p000061_right.jpg')
-    ]
+    selected_query_images = [os.path.join(user_image_folder, 'room_val005.jpg'),
+                            os.path.join(user_image_folder, 'room_val006.jpg'),
+                            os.path.join(user_image_folder, 'room_val007.jpg')]
 
     # Match query images and get the center of the largest cluster
     center_coords = match_query_images_and_get_center(selected_query_images, reference_data_file, csv_path, top_n_matches=6)
     
     # Print the result
+    print(type(center_coords))
     print(f"Center of the largest cluster: {center_coords}")

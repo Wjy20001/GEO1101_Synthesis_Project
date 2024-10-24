@@ -19,6 +19,8 @@ uvicorn = "^0.31.1"
 python-multipart = "^0.0.12"
 shapely = "^2.0.6"
 pyproj = "^3.7.0"
+torch = "^2.5.0"
+torchvision = "^0.20.0"
 
 
 [tool.poetry.group.dev.dependencies]

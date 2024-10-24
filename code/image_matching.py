@@ -94,17 +94,18 @@ def match_query_images(query_image_paths, reference_data_file, top_n_matches=5):
         display_results(query_image_path, best_matches)
 
 
-# Paths to your query folder and reference data file
-query_folder = r'C:\Users\User\Syntehsis\git_for_sift\GEO1101_Synthesis_Project\data\user_images'
-reference_data_file = r'C:\Users\User\Syntehsis\git_for_sift\GEO1101_Synthesis_Project\data\dbow_sift\data\front\cache\reference_vgg16_data.pkl'
+if __name__ == "__main__":
+        
+    # Paths to your query folder and reference data file
+    # query_folder = r'C:\Users\User\Syntehsis\git_for_sift\GEO1101_Synthesis_Project\data\user_images'
+    query_folder = os.path.join("data", "user_images")
+    # reference_data_file = r'C:\Users\User\Syntehsis\git_for_sift\GEO1101_Synthesis_Project\data\dbow_sift\data\front\cache\reference_vgg16_data.pkl'
+    reference_data_file = os.path.join("data", "training", "reference_vgg16_data.pkl")
+    # Manually specify the query images
+    selected_query_images = [os.path.join(query_folder, 'p000126_front.jpg'),
+                            os.path.join(query_folder, 'image001_front.jpg'),
+                            os.path.join(query_folder, 'image002_front.jpg'),
+                            os.path.join(query_folder, 'image003_front.jpg')]
 
-# Manually specify the query images
-selected_query_images = [
-    os.path.join(query_folder, 'p000126_front.jpg'),
-    os.path.join(query_folder, 'image001_front.jpg'),
-    os.path.join(query_folder, 'image002_front.jpg'),
-    os.path.join(query_folder, 'image003_front.jpg')
-]
-
-# Match the query images against the preprocessed reference data and display the results
-match_query_images(selected_query_images, reference_data_file, top_n_matches=5)
+    # Match the query images against the preprocessed reference data and display the results
+    match_query_images(selected_query_images, reference_data_file, top_n_matches=5)

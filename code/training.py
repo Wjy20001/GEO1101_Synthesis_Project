@@ -4,7 +4,7 @@ import torch
 import torchvision.models as models
 import torchvision.transforms as transforms
 from PIL import Image
-from const import GROUND_TRUTH_PATH, USER_IMAGE_PATH, CACHE_PATH  # Import path variables from const.py
+# from const import GROUND_TRUTH_PATH, USER_IMAGE_PATH, CACHE_PATH  # Import path variables from const.py
 
 # Extract image features using the VGG16 model
 def extract_vgg16_features(image_path, model, transform):
@@ -22,7 +22,7 @@ def extract_vgg16_features(image_path, model, transform):
 
 
 # Function to preprocess reference images and save features
-def preprocess_reference_images():
+def preprocess_reference_images(GROUND_TRUTH_PATH, output_file):
     # Load the pretrained VGG16 model and remove the classification layer
     model = models.vgg16(pretrained=True)
     model = torch.nn.Sequential(*list(model.children())[:-1])  # Remove classification layers, keep convolutional layers
@@ -36,7 +36,7 @@ def preprocess_reference_images():
     ])
 
     # Create cache folder if it doesn't exist
-    os.makedirs(CACHE_PATH, exist_ok=True)
+    # os.makedirs(CACHE_PATH, exist_ok=True)
 
     # Load reference images and extract VGG16 features
     ref_image_paths = [os.path.join(GROUND_TRUTH_PATH, img) for img in os.listdir(GROUND_TRUTH_PATH)]
@@ -49,7 +49,7 @@ def preprocess_reference_images():
         ref_vgg16_features.append(features)
 
     # Save extracted VGG16 features and image paths to a file
-    output_file = os.path.join(CACHE_PATH, 'reference_vgg16_data.pkl')
+    # output_file = os.path.join(CACHE_PATH, 'reference_vgg16_data.pkl')
     with open(output_file, 'wb') as f:
         pickle.dump((ref_image_paths, ref_vgg16_features), f)
 
@@ -57,4 +57,8 @@ def preprocess_reference_images():
 
 
 # Start processing
-preprocess_reference_images()
+if __name__ == "__main__":
+    ground_truth_path = os.path.join("data", "BK_slam_images")
+    output_file = os.path.join("data", "training", "reference_vgg16_data.pkl")
+
+    preprocess_reference_images(ground_truth_path, output_file)
