@@ -64,8 +64,8 @@ if __name__ == "__main__":
     folder_path = os.path.join("data", "room_validation")
 
     # Example usage:
-    input_geojson = os.path.join(folder_path, "test_floorplan.geojson")
-    output_geojson = os.path.join(folder_path, "test_floorplan_latlong.geojson")
+    input_geojson = os.path.join(folder_path, "BK_rooms.geojson")
+    output_geojson = os.path.join(folder_path, "BK_rooms_latlong.geojson")
 
     convert_geojson_epsg28992_to_latlong(input_geojson, output_geojson)
 
