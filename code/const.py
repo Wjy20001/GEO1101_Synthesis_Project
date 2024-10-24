@@ -2,19 +2,15 @@ import os
 
 program_dir = os.getcwd()
 
-# TODO: change this file so we can train subset of training set
-# training_set = "left_only"
-
-
-VOCABULARY_CACHE_PATH = os.path.join(
-    program_dir, "data", "cache", "vocabulary.pickle"
-)
-DATABASE_CACHE_PATH = os.path.join(
-    program_dir, "data", "cache", "database.pickle"
-)
-IMAGE_NAMES_CACHE_PATH = os.path.join(
-    program_dir, "data", "cache", "image_name_index_pairs.npy"
-)
+# VOCABULARY_CACHE_PATH = os.path.join(
+#     program_dir, "data", "cache", "vocabulary.pickle"
+# )
+# DATABASE_CACHE_PATH = os.path.join(
+#     program_dir, "data", "cache", "database.pickle"
+# )
+# IMAGE_NAMES_CACHE_PATH = os.path.join(
+#     program_dir, "data", "cache", "image_name_index_pairs.npy"
+# )
 
 GROUND_TRUTH_PATH = os.path.join(
     program_dir, "data", "csvs", "slam_camera_coordinates.csv"
@@ -39,3 +35,7 @@ NODES_PATH = os.path.join(
 API_FOLDER_PATH = os.path.join(
     program_dir, "API"
 )
+# USER_IMAGE_PATH = os.path.join("data")
+# CACHE_PATH = os.path.join()
+# GROUND_TRUTH_COORDINATES_PATH = os.path.join()
+# WALL_COORDINATES_PATH = os.path.join()
