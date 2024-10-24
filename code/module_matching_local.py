@@ -87,7 +87,7 @@ def match_query_images_and_get_center(query_image_paths, reference_data_file, cs
     
     # Process each query image
     for query_image_path in query_image_paths:
-        print(f"\nProcessing query image: {query_image_path}")
+        print(f"Processing query image: {query_image_path}")
 
         # Extract VGG16 features for the query image
         query_features = extract_vgg16_features(query_image_path, model, transform)
@@ -112,6 +112,7 @@ def match_query_images_and_get_center(query_image_paths, reference_data_file, cs
             all_coords.append(coord)
 
     # Perform DBSCAN clustering on all matched image coordinates and return the center of the largest cluster
+    print('-' * 30)
     print(f'Starting DBSCAN with {len(all_coords)} coordinates')
     largest_cluster_center = apply_dbscan_and_find_center(all_coords, min_samples=min_DBSCAN_samples)
     
