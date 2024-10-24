@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from image import ImageMatcher
+from code.old.image import ImageMatcher
 from const import VALIDATION_FILE_PATH, IMAGE_NAMES_CACHE_PATH, DATABASE_CACHE_PATH
 
 def extract_ground_truth_mappings(csv_file):

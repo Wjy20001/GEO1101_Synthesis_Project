@@ -1,76 +1,64 @@
-import glob
 import os
-import time
+import pickle
+import torch
+import torchvision.models as models
+import torchvision.transforms as transforms
+from PIL import Image
+# from const import GROUND_TRUTH_PATH, USER_IMAGE_PATH, CACHE_PATH  # Import path variables from const.py
 
-import cv2
-import dbow
-import numpy as np
-from const import (
-    DATABASE_CACHE_PATH,
-    IMAGE_NAMES_CACHE_PATH,
-    VOCABULARY_CACHE_PATH,
-)
-from tqdm import tqdm
+# Extract image features using the VGG16 model
+def extract_vgg16_features(image_path, model, transform):
+    # Load and process the image, resizing it to VGG16's input size (224x224)
+    img = Image.open(image_path).convert('RGB')
+    img = transform(img)
+    img = img.unsqueeze(0)  # Add batch dimension
 
-
-def training(
-    dataset_dir: str = os.path.join("data", "training"),
-    cluster_num: int = 10,
-    depth=2,
-    vocab_path: str = VOCABULARY_CACHE_PATH,
-    image_name_path: str = IMAGE_NAMES_CACHE_PATH,
-    database_path: str = DATABASE_CACHE_PATH,
-) -> None:
-    print("===Loading Images===")
-    program_dir = os.getcwd()
-    orb = cv2.ORB_create()
-    dataset_dir = os.path.join(program_dir, dataset_dir)
-    png_path, jpeg_path = os.path.join(dataset_dir, "*.png"), os.path.join(
-        dataset_dir, "*.jpg"
-    )
-    image_paths = glob.glob(png_path) + glob.glob(jpeg_path)
-    images = []
-    image_names = np.array([])
-    for image_path in tqdm(image_paths, desc="adding image to images"):
-        images.append(cv2.imread(image_path))
-        image_name = os.path.basename(image_path)
-        image_names = np.append(image_names, image_name)
-
-    vocabulary = dbow.Vocabulary(images, cluster_num, depth)
-    print("===Vocabulary has been made===")
-    print("===Database is being created===")
-    vocabulary.save(vocab_path)
-    np.save(image_name_path, image_names)
-
-    db = dbow.Database(vocabulary)
-    invalid_images = []
-    for i, image in tqdm(enumerate(images), desc="Processing images"):
-        _, descs = orb.detectAndCompute(image, None)
-        if descs is None:
-            invalid_images.append(image_paths[i])
-            continue
-        descs = [dbow.ORB.from_cv_descriptor(desc) for desc in descs]
-        db.add(descs)
-    db.save(database_path)
+    # Extract features
+    with torch.no_grad():
+        features = model(img)
+    
+    features = features.flatten().numpy()  # Convert PyTorch tensor to numpy array and flatten
+    return features
 
 
-def database(database_path: str) -> dbow.Database:
-    if os.path.exists(database_path):
-        return dbow.Database.load(database_path)
-    else:
-        training()
-        return dbow.Database.load(database_path)
+# Function to preprocess reference images and save features
+def preprocess_reference_images(GROUND_TRUTH_PATH, output_file):
+    # Load the pretrained VGG16 model and remove the classification layer
+    model = models.vgg16(pretrained=True)
+    model = torch.nn.Sequential(*list(model.children())[:-1])  # Remove classification layers, keep convolutional layers
+    model.eval()  # Set model to evaluation mode
+
+    # Define image transformations
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+
+    # Create cache folder if it doesn't exist
+    # os.makedirs(CACHE_PATH, exist_ok=True)
+
+    # Load reference images and extract VGG16 features
+    ref_image_paths = [os.path.join(GROUND_TRUTH_PATH, img) for img in os.listdir(GROUND_TRUTH_PATH)]
+    
+    ref_vgg16_features = []  # List to store extracted feature vectors
+
+    for image_path in ref_image_paths:
+        # Extract VGG16 features
+        features = extract_vgg16_features(image_path, model, transform)
+        ref_vgg16_features.append(features)
+
+    # Save extracted VGG16 features and image paths to a file
+    # output_file = os.path.join(CACHE_PATH, 'reference_vgg16_data.pkl')
+    with open(output_file, 'wb') as f:
+        pickle.dump((ref_image_paths, ref_vgg16_features), f)
+
+    print(f"Reference images processed and saved to {output_file}")
 
 
+# Start processing
 if __name__ == "__main__":
-    start_time = time.time()  # Start timing
-    print("training started: ", start_time)
-    training()
-    # Calculate and format elapsed time
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    hours, rem = divmod(elapsed_time, 3600)
-    minutes, seconds = divmod(rem, 60)
-    print(
-        f"Elapsed time: {int(hours):02}:{int(minutes):02}:{int(seconds):02}"
-    )  # Print in hh:mm:ss
+    ground_truth_path = os.path.join("data", "BK_slam_images")
+    output_file = os.path.join("data", "training", "reference_vgg16_data.pkl")
+
+    preprocess_reference_images(ground_truth_path, output_file)

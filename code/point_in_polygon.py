@@ -24,19 +24,20 @@ def point_in_polygon(point: tuple[float, float], geojson_file_path:str):
 
     # Create a Shapely Point object for the input coordinates
     point = Point(x, y)
-
+    
     # Iterate over the features (polygons) in the GeoJSON file
-    for polygon in data['features']:
-        if 'geometry' not in polygon or not polygon['geometry']:
+    for feature in data['features']:
+        if 'geometry' not in feature or not feature['geometry']:
             continue  # Skip invalid geometries
 
-        geometry = shape(polygon['geometry'])
+        geometry = shape(feature['geometry'])
+        geometry = shape(feature['geometry'])
         
         # Check if the point is within the polygon
         if geometry.contains(point):
-            return polygon['properties'].get('name', 'Unnamed Polygon')  # Return polygon name or a default
+            return feature['properties'].get('room')  # Return polygon name
 
-    return None  # The point is not inside any polygon
+    return ''  # The point is not inside any polygon --> so empty string for dataframes
 
 
 if __name__ == "__main__":
@@ -45,12 +46,12 @@ if __name__ == "__main__":
     test_eastwing = (85224.66,446928.80)
     test_westwing = (85138.73,446829.61)
     test_central = (85207.94,446863.64)
-
-    test_coord = test_westwing
+    orange_hall = (85228.41,446912.70)
+    test_coord = orange_hall
 
     #convert to latlong
     test_coord = cc.convert_coordinates(test_coord)
-    geojson_file = os.path.join('data', 'room_validation', 'test_floorplan_latlong.geojson')
+    geojson_file = os.path.join('data', 'floorplans', 'BK_floorplan_latlong.geojson')
 
     try:
         resulting_room = point_in_polygon(test_coord, geojson_file)

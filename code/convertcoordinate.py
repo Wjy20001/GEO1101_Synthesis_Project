@@ -61,11 +61,15 @@ def convert_geojson_epsg28992_to_latlong(input_geojson_path, output_geojson_path
 
 
 if __name__ == "__main__":
-    folder_path = os.path.join("data", "room_validation")
+    
+    floorplan_name = "BK_floorplan"
+
+    input_floorplan_name = floorplan_name + ".geojson"
+    output_flooorplan_name = floorplan_name + "_latlong.geojson"
 
     # Example usage:
-    input_geojson = os.path.join(folder_path, "test_floorplan.geojson")
-    output_geojson = os.path.join(folder_path, "test_floorplan_latlong.geojson")
+    input_geojson = os.path.join("data", "floorplans", input_floorplan_name)
+    output_geojson = os.path.join("data", "floorplans", output_flooorplan_name)
 
     convert_geojson_epsg28992_to_latlong(input_geojson, output_geojson)
 
