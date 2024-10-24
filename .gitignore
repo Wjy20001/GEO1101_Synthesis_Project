@@ -150,4 +150,4 @@ data/**/*.jpg
 data/**/*.npy
 data/**/*.pickle
 data/**/*.csv
-!data/user_images/*
+data/user_images/*
