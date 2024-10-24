@@ -70,4 +70,4 @@ if __name__ == "__main__":
     df_full['found_room'] = df_full['user_image_name'].apply(lambda x: get_room_name(x, rooms_json_path))
     df_full['found_room'] = df_full['found_room'].astype(pd.StringDtype())
 
-    print_statistics(df)
+    print_statistics(df_full)
