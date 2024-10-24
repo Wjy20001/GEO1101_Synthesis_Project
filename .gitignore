@@ -153,3 +153,4 @@ data/**/*.pkl
 data/**/*.csv
 data/user_images/*
 old_stuff/old_data/*
+data/training/*
