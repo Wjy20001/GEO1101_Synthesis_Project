@@ -32,11 +32,10 @@ def print_statistics(df: pd.DataFrame) -> None:
 
 if __name__ == "__main__":
     #define paths
-    room_val_folder: str = os.path.join("data", "room_validation")
 
-    csv_path: str = os.path.join(room_val_folder, "room_validation_linkage.csv")
-    user_image_folder: str = os.path.join(room_val_folder, "user_images")
-    rooms_json_path: str = os.path.join(room_val_folder, "test_floorplan_latlong.geojson")
+    csv_path: str = os.path.join("data", "csvs", "room_validation_linkage.csv")
+    user_image_folder: str = os.path.join("data", "user_images")
+    rooms_json_path: str = os.path.join("data", "floorplans", "test_floorplan_latlong.geojson")
     
     # get validation data as dataframe
     df: pd.DataFrame = pd.read_csv(csv_path, dtype=pd.StringDtype())

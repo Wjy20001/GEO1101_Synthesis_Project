@@ -12,7 +12,7 @@
             "type": "Feature",
             "properties": {
                 "id": 1,
-                "name": "East_Wing"
+                "room": "East_Wing"
             },
             "geometry": {
                 "type": "MultiPolygon",
@@ -56,7 +56,7 @@
             "type": "Feature",
             "properties": {
                 "id": 2,
-                "name": "West_Wing"
+                "room": "West_Wing"
             },
             "geometry": {
                 "type": "MultiPolygon",
@@ -92,7 +92,7 @@
             "type": "Feature",
             "properties": {
                 "id": 3,
-                "name": "Central_Corridor"
+                "room": "Central_Corridor"
             },
             "geometry": {
                 "type": "MultiPolygon",
