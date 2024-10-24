@@ -9,6 +9,9 @@ import pandas as pd
 from sklearn.cluster import DBSCAN
 # from const import USER_IMAGE_PATH, CACHE_PATH, GROUND_TRUTH_COORDINATES_PATH, WALL_COORDINATES_PATH
 from PIL import Image
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='torchvision')
+
 
 # Extract image features using the VGG16 model
 def extract_vgg16_features(image_path, model, transform):
@@ -30,7 +33,7 @@ def extract_coordinates_from_match(ref_image_path, csv_path):
 
     # Extract the base part of the image name (remove _front, _left suffixes)
     base_name = os.path.basename(ref_image_path).split('_')[0] + '.jpg'
-
+    
     # Find the corresponding image coordinates
     row = coordinates_df[coordinates_df['Image'] == base_name]
     
@@ -63,11 +66,11 @@ def apply_dbscan_and_find_center(all_coords, eps=0.5, min_samples=3):
             largest_cluster_size = len(label_coords)
             label_coords = np.array(label_coords)
             largest_cluster_center = np.mean(label_coords, axis=0)
-
+    print(f'largest DBSCAN cluster center =\t{largest_cluster_center}')
     return tuple(largest_cluster_center)
 
 # Load preprocessed reference data and match query images
-def match_query_images_and_get_center(query_image_paths, reference_data_file, csv_path, top_n_matches=6):
+def match_query_images_and_get_center(query_image_paths, reference_data_file, csv_path, top_n_matches=6, min_DBSCAN_samples=3):
     # Load the VGG16 model
     model = models.vgg16(pretrained=True)
     model = torch.nn.Sequential(*list(model.children())[:-1])  # Remove the classification layer
@@ -81,7 +84,7 @@ def match_query_images_and_get_center(query_image_paths, reference_data_file, cs
     ])
 
     all_coords = []  # To store all matched image coordinates
-
+    
     # Process each query image
     for query_image_path in query_image_paths:
         print(f"\nProcessing query image: {query_image_path}")
@@ -105,11 +108,13 @@ def match_query_images_and_get_center(query_image_paths, reference_data_file, cs
 
         # Extract coordinates for each matched image
         for _, ref_image_path in best_matches:
-            coords = extract_coordinates_from_match(ref_image_path, csv_path)
-            all_coords.append(coords)
+            coord = extract_coordinates_from_match(ref_image_path, csv_path)
+            all_coords.append(coord)
 
     # Perform DBSCAN clustering on all matched image coordinates and return the center of the largest cluster
-    largest_cluster_center = apply_dbscan_and_find_center(all_coords)
+    print(f'Starting DBSCAN with {len(all_coords)} coordinates')
+    largest_cluster_center = apply_dbscan_and_find_center(all_coords, min_samples=min_DBSCAN_samples)
+    
     return largest_cluster_center
 
 
