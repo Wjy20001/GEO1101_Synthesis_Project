@@ -32,6 +32,14 @@ NODES_PATH = os.path.join(
     program_dir, "data", "routing", "nodes.geojson"
 )
 
+ROOMS_PATH = os.path.join(
+    program_dir, "data", "routing", "rooms.geojson"
+)
+
+ROUTING_PATH = os.path.join(
+    program_dir, "data", "routing", "routing.geojson"
+)
+
 API_FOLDER_PATH = os.path.join(
     program_dir, "API"
 )
