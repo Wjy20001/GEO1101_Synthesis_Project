@@ -150,8 +150,11 @@ data/**/*.jpg
 data/**/*.npy
 data/**/*.pickle
 data/**/*.pkl
-data/**/*.pkl
 data/**/*.csv
-data/user_images/*
+
+!data/user_images/*
+!data/csvs/*
+!data/floorplans/*
+!data/routing/*
 old_stuff/old_data/*
 data/training/*
