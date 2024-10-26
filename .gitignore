@@ -158,3 +158,5 @@ data/**/*.csv
 !data/routing/*
 old_stuff/old_data/*
 data/training/*
+
+API/data/*

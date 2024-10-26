@@ -6,11 +6,14 @@ from typing import List
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse
 
-# Importing custom functions and constants
-from API.const import API_FOLDER_PATH
-from API.coordinate import get_coord_from_image_set
+# Importing custom functions
+from API.get_room_name import get_room_name, get_file_paths
 
-# Create FastAPI instance
+
+API_FOLDER_PATH = os.path.join(os.getcwd(), "API")
+
+
+# Create FastAPI instance 
 app = FastAPI()
 
 # Ensure the input_images folder exists
@@ -28,9 +31,9 @@ async def main():
     <html>
         <body>
             <h2>Upload Images (PNG or JPG only)</h2>
-            <form action="/upload" enctype="multipart/form-data" method="post">
+            <form action="/localize" enctype="multipart/form-data" method="post">
                 <input name="files" type="file" multiple>
-                <input type="submit" value="Upload">
+                <input type="submit" value="Localize">
             </form>
         </body>
     </html>
@@ -38,7 +41,7 @@ async def main():
     return HTMLResponse(content=content)
 
 
-@app.post("/upload/")
+@app.post("/localize/")
 async def upload_images(files: List[UploadFile] = File(...)):
     """
     Handles image uploads, saves them to a directory, and calculates the user position based on the images.
@@ -51,7 +54,7 @@ async def upload_images(files: List[UploadFile] = File(...)):
     Returns:
     --------
     JSONResponse
-        A JSON-formatted response containing the user coordinates.
+        A JSON-formatted response containing the user room and user coordinates.
     """
     # Process each uploaded file
     for file in files:
@@ -72,25 +75,34 @@ async def upload_images(files: List[UploadFile] = File(...)):
             shutil.copyfileobj(file.file, buffer)
 
     # After saving all images, run the coordinate calculation using the uploaded images
+
     try:
         print(f"Calculating user position from uploaded images.")
-        # Calculate the user position using the get_coord_from_image_set function
-        user_position = get_coord_from_image_set(
-            user_image_dir=input_images_dir
-        )
+        print('=' * 80)
+        user_img_path = os.path.join(API_FOLDER_PATH, "input_images")
+        data_path = os.path.join(API_FOLDER_PATH, "data")
+
+        img_names: list = get_file_paths(user_img_path, extensions=(".jpg", ".jpeg", ".png"))
+        floorplan_json_path: str = get_file_paths(data_path, file_format="geojson")
+        trained_model_path: str = get_file_paths(data_path, file_format="pkl")
+        slam_csv_path: str = get_file_paths(data_path, file_format="csv")
+
+        user_room, user_coordinate = get_room_name(img_names, floorplan_json_path, trained_model_path, slam_csv_path)
+        print('=' * 80)
+
 
     except subprocess.CalledProcessError as e:
         # Handle any errors that occur during the coordinate calculation
-        raise HTTPException(
-            status_code=500, detail=f"Error running coordinate.py: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Error running coordinate.py: {str(e)}")
 
     # Return the user coordinates as a JSON response
-    print(f"Sending user position:\t\t{user_position}")
-    return JSONResponse(content={"user coordinates": user_position})
+    print(f"Sending user position:\t\t{user_room}, {user_coordinate}")
+
+    return JSONResponse(content={"user_room": user_room,
+                                 "user_coordinate": user_coordinate})
 
 
-@app.post("/localize/")
+@app.post("/navigate/")
 async def run_scripts():
     """
     Endpoint to trigger the execution of script1.py and script2.py.
