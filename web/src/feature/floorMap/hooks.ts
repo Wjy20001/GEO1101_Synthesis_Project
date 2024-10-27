@@ -1,9 +1,21 @@
-import { useMemo } from 'react';
-import { useUserLocation } from '../../state/userLocation';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useDestination, useRoute, useUserLocation } from '../../state';
 import { Camerea, UserLocation } from '../../components/maplibre';
+import indoorMap from '../../assets/BK_rooms_latlong.geojson';
+import { GeoJSON } from 'geojson';
 
 const useFloorMap = () => {
-  const { position } = useUserLocation();
+  const position = useUserLocation((state) => state.position);
+  const selectRoom = useDestination((state) => state.setDestination);
+  const route = useRoute((state) => state.route);
+  const handleRoomSelect = useCallback(
+    (roomId: string | null) => {
+      if (!roomId) return;
+      selectRoom(roomId);
+    },
+    [selectRoom]
+  );
+
   const userLocation: UserLocation = useMemo(
     () => ({
       longitude: position.lng,
@@ -12,6 +24,23 @@ const useFloorMap = () => {
     }),
     [position]
   );
+
+  const [floorMap, setFloorMap] = useState<GeoJSON | undefined>(undefined);
+
+  useEffect(() => {
+    const fetchGeoJSON = async () => {
+      try {
+        const response = await fetch(indoorMap);
+        const data: GeoJSON = await response.json();
+        setFloorMap(data);
+      } catch (error) {
+        console.error('Error fetching GeoJSON:', error);
+      }
+    };
+
+    fetchGeoJSON();
+  }, []);
+
   const camera: Camerea = {
     center: [4.370632073495202, 52.005614398576945],
     zoom: 17,
@@ -24,7 +53,14 @@ const useFloorMap = () => {
     [4.475395988362235, 52.00736618403458],
   ];
 
-  return { userLocation, camera, maxBounds };
+  return {
+    userLocation,
+    camera,
+    maxBounds,
+    indoorMap: floorMap,
+    route,
+    handleRoomSelect,
+  };
 };
 
 export default useFloorMap;

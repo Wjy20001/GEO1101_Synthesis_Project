@@ -1,6 +1,6 @@
-import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
+import { Environment, OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import UserLocationPoint from '../userLocation';
 import Model from '../model';
 import AxisHelper from '../axisHelper';

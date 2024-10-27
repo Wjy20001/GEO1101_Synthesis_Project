@@ -15,8 +15,8 @@ import 'react-circular-progressbar/dist/styles.css';
 import { IconCamera, IconCheck } from '@tabler/icons-react';
 import { useCallback, useRef, useState } from 'react';
 import WebcamComp from 'react-webcam';
-import { useLoading, useUserLocation } from '../../state/userLocation';
-import { uploadPhotos } from '../../api';
+import { useLoading, useUserLocation } from '../../state';
+import { useAPI } from '../../api';
 
 type CameraProps = {
   onToggleMode: () => void;
@@ -37,6 +37,7 @@ const Camera = ({ onToggleMode }: CameraProps) => {
   const setUserLocation = useUserLocation((state) => state.setLocation);
   const loading = useLoading((state) => state.loading);
   const setLoading = useLoading((state) => state.setLoading);
+  const uploadPhotos = useAPI().uploadPhotos;
 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();

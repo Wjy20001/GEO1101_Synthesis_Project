@@ -159,5 +159,4 @@ data/**/*.csv
 old_stuff/old_data/*
 data/training/*
 
-API/data/*.pkl
-API/user_data_cache/*
+API/data/*
