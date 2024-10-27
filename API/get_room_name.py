@@ -95,34 +95,79 @@ def get_room_name(img_names: str | list,
     return room, user_coordinate if room else tuple([None, None])
 
 
-def get_file_paths(folder_path, file_format=None, extensions=None):
-    if file_format:
-        # Search for exactly one file with the specified format
-        files = glob.glob(os.path.join(folder_path, f"*.{file_format}"))
-        if len(files) == 1:
-            return files[0]
-        elif len(files) == 0:
-            raise FileNotFoundError(f"No .{file_format} file found in the folder.")
-        else:
-            raise ValueError(f"Multiple .{file_format} files found in the folder.")
-    elif extensions:
-        # Search for all files with specified extensions
-        return [
+def get_file_paths(folder_path, extension = '', images=False):
+    if extension == 'geojson':
+        # Find all GeoJSON files
+        geojson_files = [
             os.path.join(folder_path, filename)
             for filename in os.listdir(folder_path)
-            if filename.lower().endswith(extensions)
+            if filename.lower().endswith('.geojson')
         ]
+        
+        # Separate 'floorplan' and 'node' files if they exist
+        floorplan_file = next((file for file in geojson_files if 'floorplan' in file.lower()), None)
+        node_file = next((file for file in geojson_files if 'nodes' in file.lower()), None)
+        
+        if not floorplan_file or not node_file:
+            raise FileNotFoundError("Required 'floorplan' or 'node' geojson file is missing.")
+        
+        return (floorplan_file, node_file)
+    
+    elif extension == 'csv':
+        # Find the CSV file
+        csv_files = [
+            os.path.join(folder_path, filename)
+            for filename in os.listdir(folder_path)
+            if filename.lower().endswith('.csv')
+        ]
+        
+        if len(csv_files) == 1:
+            return csv_files[0]
+        elif len(csv_files) == 0:
+            raise FileNotFoundError("No CSV file found in the folder.")
+        else:
+            raise ValueError("Multiple CSV files found. Only one expected.")
+    
+    elif extension == 'pkl':
+        # Find the pickle file
+        csv_files = [
+            os.path.join(folder_path, filename)
+            for filename in os.listdir(folder_path)
+            if filename.lower().endswith('.pkl')
+        ]
+        
+        if len(csv_files) == 1:
+            return csv_files[0]
+        elif len(csv_files) == 0:
+            raise FileNotFoundError("No pkl file found in the folder.")
+        else:
+            raise ValueError("Multiple pkl files found. Only one expected.")
+
+    elif images:
+        # Find all image files with specified extensions
+        image_files = [
+            os.path.join(folder_path, filename)
+            for filename in os.listdir(folder_path)
+            if filename.lower().endswith(('jpg', 'jpeg', 'png'))
+        ]
+        
+        if not image_files:
+            raise FileNotFoundError("No image files (jpg, jpeg, png) found in the folder.")
+        
+        return image_files
+    
     else:
-        raise ValueError("Either file_format or extensions must be provided.")
+        raise ValueError("Unsupported file extension. Only 'geojson', 'csv', 'jpg', 'jpeg', and 'png' are supported.")
+
 
 if __name__ == "__main__":
     user_img_path = os.path.join("API", "input_images")
     data_path = os.path.join("API", "data")
 
-    img_names: list = get_file_paths(user_img_path, extensions=(".jpg", ".jpeg", ".png"))
-    floorplan_json_path: str = get_file_paths(data_path, file_format="geojson")
-    trained_model_path: str = get_file_paths(data_path, file_format="pkl")
-    slam_csv_path: str = get_file_paths(data_path, file_format="csv")
+    img_names: list = get_file_paths(user_img_path, images=True)
+    floorplan_json_path, _ = get_file_paths(data_path, extension="geojson")
+    trained_model_path: str = get_file_paths(data_path, extension="pkl")
+    slam_csv_path: str = get_file_paths(data_path, extension="csv")
 
 
     room_name = get_room_name(img_names, floorplan_json_path, trained_model_path, slam_csv_path)
