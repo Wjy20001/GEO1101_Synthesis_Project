@@ -16,9 +16,9 @@ API_FOLDER_PATH = os.path.join(os.getcwd(), "API")
 # Create FastAPI instance 
 app = FastAPI()
 
-# Ensure the input_images folder exists
-input_images_dir = os.path.join(API_FOLDER_PATH, "input_images")
-os.makedirs(input_images_dir, exist_ok=True)
+# Ensure the user_data_cache folder exists
+cache_dir = os.path.join(API_FOLDER_PATH, "user_data_cache")
+os.makedirs(cache_dir, exist_ok=True)
 
 
 @app.get("/")
@@ -68,9 +68,9 @@ async def upload_images(files: List[UploadFile] = File(...)):
             )
 
         # Define the path where the image will be saved
-        image_path = os.path.join(input_images_dir, file.filename)
+        image_path = os.path.join(cache_dir, file.filename)
 
-        # Save the uploaded image to the input_images folder
+        # Save the uploaded image to the cache_dir folder
         with open(image_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
@@ -79,10 +79,10 @@ async def upload_images(files: List[UploadFile] = File(...)):
     try:
         print(f"Calculating user position from uploaded images.")
         print('=' * 80)
-        user_img_path = os.path.join(API_FOLDER_PATH, "input_images")
+        
         data_path = os.path.join(API_FOLDER_PATH, "data")
 
-        img_names: list = get_file_paths(user_img_path, images=True)
+        img_names: list = get_file_paths(cache_dir, images=True)
         floorplan_json_path, _ = get_file_paths(data_path, extension="geojson")
         trained_model_path: str = get_file_paths(data_path, extension="pkl")
         slam_csv_path: str = get_file_paths(data_path, extension="csv")
@@ -94,6 +94,22 @@ async def upload_images(files: List[UploadFile] = File(...)):
     except subprocess.CalledProcessError as e:
         # Handle any errors that occur during the coordinate calculation
         raise HTTPException(status_code=500, detail=f"Error running coordinate.py: {str(e)}")
+
+
+    finally:
+        # Clean up by deleting all files in the cache_dir directory
+        print('-' * 30)
+        print(f"removing user images")
+
+        for file in os.listdir(cache_dir):
+            file_path = os.path.join(cache_dir, file)
+
+            try:
+                os.remove(file_path)
+
+            except Exception as e:
+                print(f"Failed to delete {file_path}: {e}")
+
 
     # Return the user coordinates as a JSON response
     print(f"Sending user position:\t\t{user_room}, {user_coordinate}")
