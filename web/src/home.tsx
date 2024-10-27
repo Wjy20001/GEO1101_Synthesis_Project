@@ -5,7 +5,7 @@ import { IconPhotoSensor2, IconRouteAltRight } from '@tabler/icons-react';
 import Camera from './feature/camera';
 import { GeoJSON } from 'geojson';
 import indoorMap from './assets/BK_rooms_latlong.geojson';
-import { useDestination, useRoute } from './state';
+import { useDestination } from './state';
 import { useAPI } from './api';
 
 const Page = () => {
@@ -20,7 +20,6 @@ const Page = () => {
 
   const selectedRoom = useDestination((state) => state.destination);
   const selectRoom = useDestination((state) => state.setDestination);
-  const route = useRoute((state) => state.route);
   const [rooms, setRooms] = useState<string[]>([]);
 
   useEffect(() => {
@@ -48,8 +47,6 @@ const Page = () => {
     [selectRoom]
   );
 
-  console.log('route', route);
-
   return mode === 'floorMap' ? (
     <>
       <div style={{ position: 'relative' }}>
@@ -69,7 +66,7 @@ const Page = () => {
             onChange={(value, _) => handleRoomSelect(value)}
           />
         </Container>
-        <FloorMap onRoomSelect={handleRoomSelect} route={route} />
+        <FloorMap />
         <Container
           style={{
             position: 'fixed',

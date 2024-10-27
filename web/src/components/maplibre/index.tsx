@@ -254,6 +254,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
       initialBearing,
       maxBounds,
       userLocation, // Added userLocation to dependency array
+      route,
     ]);
 
     return (

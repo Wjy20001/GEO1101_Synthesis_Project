@@ -1,15 +1,18 @@
 import React from 'react';
 import useHooks from './hooks';
 import MapLibre from '../../components/maplibre';
-import { GeoJSON } from 'geojson';
 
-export type FloorMapProps = {
-  onRoomSelect?: (room: string) => void;
-  route?: GeoJSON;
-};
+export type FloorMapProps = {};
 
-const FloorMap = React.memo(({ onRoomSelect, route }: FloorMapProps) => {
-  const { userLocation, camera, maxBounds, indoorMap } = useHooks();
+const FloorMap = React.memo(({}: FloorMapProps) => {
+  const {
+    userLocation,
+    camera,
+    maxBounds,
+    indoorMap,
+    route,
+    handleRoomSelect,
+  } = useHooks();
 
   return (
     <MapLibre
@@ -17,7 +20,7 @@ const FloorMap = React.memo(({ onRoomSelect, route }: FloorMapProps) => {
       maxBounds={maxBounds}
       userLocation={userLocation}
       indoorMap={indoorMap}
-      onRoomClick={onRoomSelect}
+      onRoomClick={handleRoomSelect}
       route={route}
     ></MapLibre>
   );

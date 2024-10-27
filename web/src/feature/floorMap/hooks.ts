@@ -1,11 +1,21 @@
-import { useMemo, useState, useEffect } from 'react';
-import { useUserLocation } from '../../state';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useDestination, useRoute, useUserLocation } from '../../state';
 import { Camerea, UserLocation } from '../../components/maplibre';
 import indoorMap from '../../assets/BK_rooms_latlong.geojson';
 import { GeoJSON } from 'geojson';
 
 const useFloorMap = () => {
   const position = useUserLocation((state) => state.position);
+  const selectRoom = useDestination((state) => state.setDestination);
+  const route = useRoute((state) => state.route);
+  const handleRoomSelect = useCallback(
+    (roomId: string | null) => {
+      if (!roomId) return;
+      selectRoom(roomId);
+    },
+    [selectRoom]
+  );
+
   const userLocation: UserLocation = useMemo(
     () => ({
       longitude: position.lng,
@@ -43,7 +53,14 @@ const useFloorMap = () => {
     [4.475395988362235, 52.00736618403458],
   ];
 
-  return { userLocation, camera, maxBounds, indoorMap: floorMap };
+  return {
+    userLocation,
+    camera,
+    maxBounds,
+    indoorMap: floorMap,
+    route,
+    handleRoomSelect,
+  };
 };
 
 export default useFloorMap;
