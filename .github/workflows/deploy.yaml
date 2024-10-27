@@ -1,0 +1,85 @@
+name: Deploy FastAPI to Google Cloud Functions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "::add-path::$HOME/.local/bin"
+
+      - name: Export requirements.txt
+        run: |
+          poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+      - name: Move API files to Root
+        run: |
+          if [ -d "API" ]; then
+            echo "Moving files from API/ to root directory..."
+            # First, create necessary directories
+            mkdir -p data
+            # Copy all files except .pickle files in data directory
+            find API -type f ! -path "API/data/*.pkl" -exec cp --parents {} . \;
+            # Copy hidden files
+            cp -r API/.[!.]* .  2>/dev/null || true
+            rm -rf API
+          else
+            echo "API/ directory does not exist. Skipping move."
+          fi
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          install_components: "beta"
+
+      - name: Deploy to Google Cloud Functions
+        run: |
+          gcloud functions deploy synthesis-api \
+            --runtime python311 \
+            --trigger-http \
+            --allow-unauthenticated \
+            --entry-point handle_request \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --region europe-west1 \
+            --timeout=60s \
+            --memory=256MB \
+            --set-env-vars environment=production \
+            --source .
+
+      # Optional: Post-deployment verification or notifications
+      # - name: Verify Deployment
+      #   run: |
+      #     FUNCTION_URL=$(gcloud functions describe fastapi-function --format 'value(httpsTrigger.url)')
+      #     echo "Function deployed at: $FUNCTION_URL"
+      #     curl -s $FUNCTION_URL || exit 1
+
+      # - name: Notify on Slack (Example)
+      #   uses: slackapi/slack-github-action@v1.23.0
+      #   with:
+      #     payload: |
+      #       {
+      #         "text": "FastAPI application has been successfully deployed to Google Cloud Functions."
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
