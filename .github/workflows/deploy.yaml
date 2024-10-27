@@ -43,7 +43,7 @@ jobs:
       #     fi
 
       - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
@@ -69,7 +69,7 @@ jobs:
             --timeout=60s \
             --memory=256MB \
             --set-env-vars environment=production \
-            --source ./API
+            --source API/
 
       # Optional: Post-deployment verification or notifications
       # - name: Verify Deployment
