@@ -1,37 +1,28 @@
-# Farm + React
+# Web Frontend
 
-This template should help you start developing using React and TypeScript in Farm.
+This is the web frontend for the indoor navigation system. It provides a user interface for uploading images and getting navigation directions.
 
-## Setup
+## Prerequisites
 
-Install the dependencies:
+- Node.js (v16 or higher)
+- npm (comes with Node.js)
 
-```bash
-pnpm install
-```
+## Installation
 
-## Get Started
+1. Install Node.js from [nodejs.org](https://nodejs.org/)
 
-Start the dev server:
+2. Clone this repository and navigate to the web directory:
 
-```bash
-pnpm start
-```
+3. Install dependencies:
 
-Build the app for production:
+  ```bash
+  npm install
+  ```
 
-```bash
-pnpm build
-```
+## Usage
 
-Preview the Production build product:
+To start the web frontend, run:
 
 ```bash
-pnpm preview
-```
-
-Clear persistent cache local files
-
-```bash
-pnpm clean
+npm run dev
 ```
