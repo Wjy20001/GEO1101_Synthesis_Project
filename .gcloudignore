@@ -152,12 +152,15 @@ data/**/*.pickle
 data/**/*.pkl
 data/**/*.csv
 
-!data/user_images/*
-!data/csvs/*
-!data/floorplans/*
-!data/routing/*
-old_stuff/old_data/*
+data/
 data/training/*
 
 API/data/*
 API/input_images/*
+code/**
+data/**/*
+web/
+API/data/
+!API/data/slam_coordinates.csv
+!API/data/floorplan.geojson
+!API/data/nodes.geojson

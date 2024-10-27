@@ -4,7 +4,7 @@ import { Button, Container, Select } from '@mantine/core';
 import { IconPhotoSensor2, IconRouteAltRight } from '@tabler/icons-react';
 import Camera from './feature/camera';
 import { GeoJSON } from 'geojson';
-import indoorMap from './assets/BK_rooms_latlong.geojson';
+import indoorMap from './assets/floorplan.geojson';
 import { useDestination } from './state';
 import { useAPI } from './api';
 

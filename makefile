@@ -1,10 +1,10 @@
 
-PYTHON_FILES := code/*.py
+PYTHON_FILES := API/*.py
 
 # Linting
 .PHONY: lint
 lint:
-	@echo "Running pylint..."
+	@echo "Running flake8..."
 	poetry run flake8 $(PYTHON_FILES)
 
 # Formatting
@@ -58,3 +58,13 @@ image:
 classify:
 	@echo "Running classification..."
 	poetry run python code/classify.py
+
+.PHONY: server
+server:
+	@echo "Running server..."
+	poetry run uvicorn API.main:app --reload
+
+.PHONY: deploy-zip
+deploy-zip:
+	@echo "Creating deployment package..."
+	zip -r deploy.zip ./API/**/*.py ./API/data/**/* requirements.txt
