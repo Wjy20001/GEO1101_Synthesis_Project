@@ -53,6 +53,10 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           install_components: "beta"
 
+      - name: List up directories
+        run: |
+          ls -la
+
       - name: Deploy to Google Cloud Functions
         run: |
           gcloud functions deploy synthesis-api \
