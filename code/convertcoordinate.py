@@ -62,7 +62,7 @@ def convert_geojson_epsg28992_to_latlong(input_geojson_path, output_geojson_path
 
 if __name__ == "__main__":
     
-    floorplan_name = "nodes"
+    floorplan_name = "nodes_v2"
 
     input_floorplan_name = floorplan_name + ".geojson"
     output_flooorplan_name = floorplan_name + "_latlong.geojson"
