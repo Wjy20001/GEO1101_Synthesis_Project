@@ -2,20 +2,24 @@ import os
 import shutil
 import subprocess
 from typing import List
-
-from fastapi import FastAPI, File, HTTPException, UploadFile
+import json
+from fastapi import FastAPI, File, HTTPException, UploadFile, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 
-# Importing custom functions and constants
-from API.const import API_FOLDER_PATH
-from API.coordinate import get_coord_from_image_set
+# Importing custom functions
+from API.get_room_name import get_room_name, get_file_paths
+from API.routing import navigation
 
-# Create FastAPI instance
+API_FOLDER_PATH = os.path.join(os.getcwd(), "API")
+data_path = os.path.join(API_FOLDER_PATH, "data")
+
+
+# Create FastAPI instance 
 app = FastAPI()
 
-# Ensure the input_images folder exists
-input_images_dir = os.path.join(API_FOLDER_PATH, "input_images")
-os.makedirs(input_images_dir, exist_ok=True)
+# Ensure the user_data_cache folder exists
+cache_dir = os.path.join(API_FOLDER_PATH, "user_data_cache")
+os.makedirs(cache_dir, exist_ok=True)
 
 
 @app.get("/")
@@ -26,19 +30,30 @@ async def main():
     # HTML form with an upload button for multiple file uploads
     content = """
     <html>
-        <body>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 10px;">
             <h2>Upload Images (PNG or JPG only)</h2>
-            <form action="/upload" enctype="multipart/form-data" method="post">
-                <input name="files" type="file" multiple>
-                <input type="submit" value="Upload">
+            <form action="/localize" enctype="multipart/form-data" method="post">
+                <input name="files" type="file" multiple style="display: block; margin-bottom: 10px;">
+                <input type="submit" value="Localize" style="padding: 10px 20px;">
+            </form>
+            <h2>Navigate</h2>
+            <form action="/navigate" method="post">
+                <label for="start_room_name">Enter Start Room:</label>
+                <input type="text" id="start_room_name" name="start_room_name" required style="display: block; margin-bottom: 10px;">
+                
+                <label for="end_room_name">Enter Destination Room:</label>
+                <input type="text" id="end_room_name" name="end_room_name" required style="display: block; margin-bottom: 10px;">
+                
+                <input type="submit" value="Navigate" style="padding: 10px 20px;">
             </form>
         </body>
     </html>
     """
+
     return HTMLResponse(content=content)
 
 
-@app.post("/upload/")
+@app.post("/localize/")
 async def upload_images(files: List[UploadFile] = File(...)):
     """
     Handles image uploads, saves them to a directory, and calculates the user position based on the images.
@@ -51,7 +66,7 @@ async def upload_images(files: List[UploadFile] = File(...)):
     Returns:
     --------
     JSONResponse
-        A JSON-formatted response containing the user coordinates.
+        A JSON-formatted response containing the user room and user coordinates.
     """
     # Process each uploaded file
     for file in files:
@@ -65,49 +80,95 @@ async def upload_images(files: List[UploadFile] = File(...)):
             )
 
         # Define the path where the image will be saved
-        image_path = os.path.join(input_images_dir, file.filename)
+        image_path = os.path.join(cache_dir, file.filename)
 
-        # Save the uploaded image to the input_images folder
+        # Save the uploaded image to the cache_dir folder
         with open(image_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
     # After saving all images, run the coordinate calculation using the uploaded images
+
     try:
         print(f"Calculating user position from uploaded images.")
-        # Calculate the user position using the get_coord_from_image_set function
-        user_position = get_coord_from_image_set(
-            user_image_dir=input_images_dir
-        )
+        print('=' * 80)
+
+        img_names: list = get_file_paths(cache_dir, images=True)
+        floorplan_json_path = os.path.join(data_path, "floorplan.geojson")
+        trained_model_path: str = os.path.join(data_path, "model.pkl")
+        slam_csv_path: str = os.path.join(data_path, "slam_coordinates.csv")
+
+        user_room, user_coordinate = get_room_name(img_names, floorplan_json_path, trained_model_path, slam_csv_path)
+        print('=' * 80)
+
 
     except subprocess.CalledProcessError as e:
         # Handle any errors that occur during the coordinate calculation
-        raise HTTPException(
-            status_code=500, detail=f"Error running coordinate.py: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Error running coordinate.py: {str(e)}")
+
+
+    finally:
+        # Clean up by deleting all files in the cache_dir directory
+        print('-' * 30)
+        print(f"removing user images")
+
+        for file in os.listdir(cache_dir):
+            file_path = os.path.join(cache_dir, file)
+
+            try:
+                os.remove(file_path)
+
+            except Exception as e:
+                print(f"Failed to delete {file_path}: {e}")
+
 
     # Return the user coordinates as a JSON response
-    print(f"Sending user position:\t\t{user_position}")
-    return JSONResponse(content={"user coordinates": user_position})
+    print(f"Sending user position:\t\t{user_room}, {user_coordinate}")
+
+    return JSONResponse(content={"user_room": user_room,
+                                 "user_coordinate": user_coordinate})
 
 
-@app.post("/localize/")
-async def run_scripts():
-    """
-    Endpoint to trigger the execution of script1.py and script2.py.
-    """
+@app.post("/navigate/")
+async def find_route(start_room_name: str = Form(...), end_room_name: str = Form(...)):
+    floorplan_json_path = os.path.join(data_path, "floorplan.geojson")
+    nodes_json_path = os.path.join(data_path, "nodes.geojson")
+    route_json_path = os.path.join(API_FOLDER_PATH, "user_data_cache", "route.geojson")
+    
     try:
-        # Run script1.py
-        subprocess.run(["python", "path/to/script1.py"], check=True)
-        # Run script2.py
-        subprocess.run(["python", "path/to/script2.py"], check=True)
+        print("=" * 60)
+        print("Calculating fastest route")
+        print("Start Room:\t", start_room_name)
+        print("End Room:\t", end_room_name)
 
+        # Run navigation function to generate the GeoJSON file
+        navigation(start_room_name, end_room_name, floorplan_json_path, nodes_json_path, route_json_path)
+        
     except subprocess.CalledProcessError as e:
-        raise HTTPException(
-            status_code=500, detail=f"Error running scripts: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Error running scripts: {str(e)}")
 
-    return JSONResponse(content={"message": "Scripts executed successfully"})
+    try:
+        # Load GeoJSON data from the generated file and return it as JSON response
+        with open(route_json_path, "r") as file:
+            geojson_data = json.load(file)
+        
+        print(f"Sending routing json")
+        return JSONResponse(content=geojson_data)
 
+    except FileNotFoundError:
+        return JSONResponse(content={"error": "GeoJSON file not found."}, status_code=404)
+    except json.JSONDecodeError:
+        return JSONResponse(content={"error": "Invalid GeoJSON format."}, status_code=400)
+
+    finally:
+        # Delete the GeoJSON file after the response has been sent
+        cache_path_name = os.path.join(os.path.basename(os.path.dirname(route_json_path)), os.path.basename(route_json_path))
+
+        if os.path.exists(route_json_path):
+            try:
+                os.remove(route_json_path)
+                print(f"Deleted temporary file: {cache_path_name}")
+            except Exception as e:
+                print(f"Failed to delete {cache_path_name}: {e}")
 
 
 if __name__ == "__main__":

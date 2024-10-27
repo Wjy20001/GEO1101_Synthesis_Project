@@ -61,7 +61,6 @@ if __name__ == "__main__":
     #define paths
     
     csv_path_validation: str = os.path.join("data", "csvs", "room_validation_linkage_single.csv")
-    user_image_folder: str = os.path.join("data", "user_images")
     rooms_json_path: str = os.path.join("data", "floorplans", "BK_floorplan_latlong.geojson")
 
     reference_data_file: str = os.path.join("data", "training", 'reference_vgg16_data.pkl')

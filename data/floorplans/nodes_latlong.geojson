@@ -1,0 +1,1004 @@
+{
+  "type": "FeatureCollection",
+  "name": "nodes",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 0,
+        "label": "entrance",
+        "neighbors": "1",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370519979412588,
+          52.005730001275445
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "label": "servicepunt",
+        "neighbors": "0, 2",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370572510907897,
+          52.00570148374229
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "label": "lobby",
+        "neighbors": "1, 3, 47",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370644919666486,
+          52.00569773360622
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "label": "corridor_e9_1",
+        "neighbors": "2, 4",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370717484293425,
+          52.00575483345398
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "label": "corridor_e9_2",
+        "neighbors": "3, 5",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37082429590348,
+          52.00583860368101
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5,
+        "label": "elevator",
+        "neighbors": "4, 6",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370925493814389,
+          52.00591571784298
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 6,
+        "label": "red_stairs",
+        "neighbors": "5, 7, 34",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3709974544573456,
+          52.005975436839094
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7,
+        "label": "corridor_e8",
+        "neighbors": "6, 8, 9",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370903061121593,
+          52.006022355343994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8,
+        "label": "snack_hall",
+        "neighbors": "7",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370834804501152,
+          52.00596477217124
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 9,
+        "label": "corridor_e7_1",
+        "neighbors": "7, 10, 11",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370825664086173,
+          52.006058760055204
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 10,
+        "label": "door_p1",
+        "neighbors": "9, 13",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370812016596116,
+          52.0060438050155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11,
+        "label": "corridor_e7_2",
+        "neighbors": "9, 12, 14",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370788911396478,
+          52.00607642230464
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12,
+        "label": "door_p2",
+        "neighbors": "11, 13",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370768471802916,
+          52.00606538639967
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 13,
+        "label": "hall_p",
+        "neighbors": "10, 12",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370762232639705,
+          52.00602715374569
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 14,
+        "label": "corridor_e6_1",
+        "neighbors": "11, 15, 16",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3707300906045505,
+          52.00610654334677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 15,
+        "label": "door_q1",
+        "neighbors": "14, 18",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37071294704722,
+          52.006092274104994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 16,
+        "label": "corridor_e6_2",
+        "neighbors": "14, 17, 19, 42",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370660151827363,
+          52.00614019620786
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 17,
+        "label": "door_q2",
+        "neighbors": "16, 18",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370642665386786,
+          52.00612754681115
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 18,
+        "label": "hall_q",
+        "neighbors": "15, 17",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370642375789488,
+          52.00608276239555
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 19,
+        "label": "door_b",
+        "neighbors": "16, 20",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370639371786709,
+          52.00614772557202
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 20,
+        "label": "hall_b",
+        "neighbors": "19",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370533398574105,
+          52.00615883122673
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 21,
+        "label": "corridor_e4_1",
+        "neighbors": "22, 23, 42",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37078088177549,
+          52.00623156659517
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 22,
+        "label": "door_d1",
+        "neighbors": "21, 25",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370759722628719,
+          52.006240890795105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 23,
+        "label": "corridor_e4_2",
+        "neighbors": "21, 24, 40, 44",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370855497684921,
+          52.00628941168032
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 24,
+        "label": "door_d2",
+        "neighbors": "23, 25",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370833198408191,
+          52.00629785093266
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 25,
+        "label": "hall_d",
+        "neighbors": "22, 24",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370762737505045,
+          52.00630051230897
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 26,
+        "label": "corridor_e2_1",
+        "neighbors": "24, 28, 39, 44",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371002609471939,
+          52.00640379218488
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 27,
+        "label": "door_r1",
+        "neighbors": "26, 30",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370982427168078,
+          52.00641370006998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 28,
+        "label": "corridor_e2_2",
+        "neighbors": "26, 29, 46",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371083271668794,
+          52.006466083220964
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 29,
+        "label": "door_r2",
+        "neighbors": "28, 30",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371061159362584,
+          52.006474802576456
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 30,
+        "label": "hall_r",
+        "neighbors": "27, 29",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370975138011295,
+          52.006467973834475
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 31,
+        "label": "tree_hall",
+        "neighbors": "32, 46",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371244538592934,
+          52.006587353674604
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 32,
+        "label": "door_geolab",
+        "neighbors": "31, 33",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371424364545614,
+          52.00671079801262
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 33,
+        "label": "geolab",
+        "neighbors": "32",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371441073244832,
+          52.00672721140361
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 34,
+        "label": "oost_serre",
+        "neighbors": "6, 35, 40",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371185952802699,
+          52.00612691991835
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 35,
+        "label": "espressobar",
+        "neighbors": "34, 36",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371338664754673,
+          52.00624075999272
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 36,
+        "label": "corridor_e10",
+        "neighbors": "35, 37, 39",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371296167298133,
+          52.00626041353794
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 37,
+        "label": "north_entrance",
+        "neighbors": "36",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371366373416634,
+          52.00631700238533
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 38,
+        "label": "bk-expo",
+        "neighbors": "39",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371200377562445,
+          52.00637841123608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 39,
+        "label": "corridor_e11",
+        "neighbors": "26 ,36, 38",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37114681267707,
+          52.00632975165131
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 40,
+        "label": "orange_hall",
+        "neighbors": "23, 34, 41",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37100519988233,
+          52.00621656328243
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 41,
+        "label": "hall_k",
+        "neighbors": "40",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3709102471501975,
+          52.00613862792254
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 42,
+        "label": "corridor_e5",
+        "neighbors": "16, 21, 43",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370720972772214,
+          52.00618502673122
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 43,
+        "label": "R2",
+        "neighbors": "42",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370656659986304,
+          52.006216238454705
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 44,
+        "label": "corridor_e3",
+        "neighbors": "23, 26, 45",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370930412725129,
+          52.0063468853549
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 45,
+        "label": "R1",
+        "neighbors": "44",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370866717224855,
+          52.00637978867936
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 46,
+        "label": "corridor_e1",
+        "neighbors": "28, 31",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.371151175050477,
+          52.00652037464692
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 47,
+        "label": "corridor_w1",
+        "neighbors": "2, 48",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370440814741982,
+          52.00554384174958
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 48,
+        "label": "corridor_w2_1",
+        "neighbors": "47, 58, 59",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370275715103461,
+          52.00541983356116
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 49,
+        "label": "door_w1",
+        "neighbors": "50, 59",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370222125417321,
+          52.00537655551895
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 50,
+        "label": "west_entrance",
+        "neighbors": "49, 51",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370201340239693,
+          52.005357831841735
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 51,
+        "label": "berlage_hall_1",
+        "neighbors": "50, 52, 53",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370159584358757,
+          52.00532856408059
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 52,
+        "label": "berlage_hall_2",
+        "neighbors": "51, 54, 56",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370096993943622,
+          52.00528275383677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 53,
+        "label": "door_berlage_1",
+        "neighbors": "51, 55",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3701774537889415,
+          52.0053199918762
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 54,
+        "label": "door_berlage_2",
+        "neighbors": "52, 55",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37011487573976,
+          52.00527363633488
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 55,
+        "label": "berlage_01",
+        "neighbors": "53, 54",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370205396079301,
+          52.0052569653236
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 56,
+        "label": "door_berlage_3",
+        "neighbors": "52, 57",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370067608218486,
+          52.005253592944726
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 57,
+        "label": "berlage_02",
+        "neighbors": "56",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370084187919205,
+          52.005185014081256
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 58,
+        "label": "stairs_west",
+        "neighbors": "48",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370329497923903,
+          52.005396163697014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 59,
+        "label": "corridor_w2_2",
+        "neighbors": "48, 49, 60",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370237766888328,
+          52.005388280719885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 60,
+        "label": "door_w2",
+        "neighbors": "59, 61",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370254734196235,
+          52.00538051882947
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 61,
+        "label": "corridor_w3",
+        "neighbors": "60",
+        "weights": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370325838133527,
+          52.00534322693254
+        ]
+      }
+    }
+  ]
+}
