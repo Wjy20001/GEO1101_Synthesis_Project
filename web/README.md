@@ -13,6 +13,10 @@ This is the web frontend for the indoor navigation system. It provides a user in
 
 2. Clone this repository and navigate to the web directory:
 
+  ```bash
+  git clone
+  cd web
+  ```
 3. Install dependencies:
 
   ```bash
