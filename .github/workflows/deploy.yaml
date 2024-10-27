@@ -65,7 +65,7 @@ jobs:
             --timeout=60s \
             --memory=256MB \
             --set-env-vars environment=production \
-            --source /API
+            --source ./API
 
       # Optional: Post-deployment verification or notifications
       # - name: Verify Deployment
