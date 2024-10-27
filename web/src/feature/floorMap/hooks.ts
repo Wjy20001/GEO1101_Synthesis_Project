@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useDestination, useRoute, useUserLocation } from '../../state';
 import { Camerea, UserLocation } from '../../components/maplibre';
-import indoorMap from '../../assets/BK_rooms_latlong.geojson';
+import indoorMap from '../../assets/floorplan.geojson';
 import { GeoJSON } from 'geojson';
 
 const useFloorMap = () => {
