@@ -29,11 +29,11 @@ async def main():
     # HTML form with an upload button for multiple file uploads
     content = """
     <html>
-        <body>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 10px;">
             <h2>Upload Images (PNG or JPG only)</h2>
             <form action="/localize" enctype="multipart/form-data" method="post">
-                <input name="files" type="file" multiple>
-                <input type="submit" value="Localize">
+                <input name="files" type="file" multiple style="display: block; margin-bottom: 10px;">
+                <input type="submit" value="Localize" style="padding: 10px 20px;">
             </form>
         </body>
     </html>
@@ -82,10 +82,10 @@ async def upload_images(files: List[UploadFile] = File(...)):
         user_img_path = os.path.join(API_FOLDER_PATH, "input_images")
         data_path = os.path.join(API_FOLDER_PATH, "data")
 
-        img_names: list = get_file_paths(user_img_path, extensions=(".jpg", ".jpeg", ".png"))
-        floorplan_json_path: str = get_file_paths(data_path, file_format="geojson")
-        trained_model_path: str = get_file_paths(data_path, file_format="pkl")
-        slam_csv_path: str = get_file_paths(data_path, file_format="csv")
+        img_names: list = get_file_paths(user_img_path, images=True)
+        floorplan_json_path, _ = get_file_paths(data_path, extension="geojson")
+        trained_model_path: str = get_file_paths(data_path, extension="pkl")
+        slam_csv_path: str = get_file_paths(data_path, extension="csv")
 
         user_room, user_coordinate = get_room_name(img_names, floorplan_json_path, trained_model_path, slam_csv_path)
         print('=' * 80)
@@ -108,10 +108,7 @@ async def run_scripts():
     Endpoint to trigger the execution of script1.py and script2.py.
     """
     try:
-        # Run script1.py
-        subprocess.run(["python", "path/to/script1.py"], check=True)
-        # Run script2.py
-        subprocess.run(["python", "path/to/script2.py"], check=True)
+        pass
 
     except subprocess.CalledProcessError as e:
         raise HTTPException(
