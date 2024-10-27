@@ -10,11 +10,6 @@ interface UserLocation {
   setLocation: (position: Position) => void;
 }
 
-type Loading = {
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
-};
-
 const useUserLocation = create<UserLocation>((set) => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -39,9 +34,4 @@ const useUserLocation = create<UserLocation>((set) => {
   };
 });
 
-const useLoading = create<Loading>((set) => ({
-  loading: false,
-  setLoading: (loading) => set(() => ({ loading })),
-}));
-
-export { useUserLocation, useLoading };
+export default useUserLocation;

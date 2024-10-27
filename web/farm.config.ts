@@ -23,7 +23,7 @@ export default defineConfig({
       },
     },
     assets: {
-      include: ['png', 'jpg', 'jpeg', 'gif', 'svg', 'glb', 'gltf'],
+      include: ['png', 'jpg', 'jpeg', 'gif', 'svg', 'glb', 'gltf', 'geojson'],
     },
   },
   // Options related to the dev server
