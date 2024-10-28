@@ -66,9 +66,9 @@ jobs:
             --entry-point handle_request \
             --project ${{ secrets.GCP_PROJECT_ID }} \
             --region europe-west1 \
-            --timeout=60s \
-            --memory=256MB \
-            --set-env-vars environment=production \
+            --timeout=300s \
+            --memory=2GB \
+            --set-env-vars environment=production REFERENCE_DATA_URL=${{ secrets.REFERENCE_DATA_URL }} \
             --source API/
 
       # Optional: Post-deployment verification or notifications
