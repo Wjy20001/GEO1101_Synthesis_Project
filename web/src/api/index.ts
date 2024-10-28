@@ -7,7 +7,7 @@ import {
 } from '../state';
 import { GeoJSON } from 'geojson';
 
-const BASE_URL = 'https://http://127.0.0.1:8000';
+const BASE_URL = 'http://127.0.0.1:8000';
 
 export const useAPI = () => {
   const setLoading = useLoading((state) => state.setLoading);
@@ -21,7 +21,7 @@ export const useAPI = () => {
       setLoading(true);
       const formData = new FormData();
       photos.forEach((photo) => {
-        formData.append('photos', photo);
+        formData.append('files', photo);
       });
 
       const response = await fetch(`${BASE_URL}/localize`, {
@@ -39,10 +39,13 @@ export const useAPI = () => {
   );
 
   const searchRoute = useCallback(async () => {
+    console.log('selected room: ', selectedRoom);
+    if (!selectedRoom || !userLocations.room) return;
+
     setLoading(true);
-    // const response = await fetch(
-    //   `${BASE_URL}/navigate?roomName=${roomName}&userLocation=${userLocation.room}
-    // );
+    const response = await fetch(
+      `${BASE_URL}/navigate?start_room_name=${userLocations.room}&end_room_name=${selectedRoom}`
+    );
 
     // if (!response.ok) {
     //   throw new Error('Failed to search route');
@@ -51,30 +54,30 @@ export const useAPI = () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Mocking the API response for debugging
-    const response = {
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          type: 'FeatureCollection',
-          features: [
-            {
-              type: 'Feature',
-              geometry: {
-                type: 'LineString',
-                coordinates: [
-                  [userLocation.lng, userLocation.lat],
-                  [userLocation.lng + 0.0001, userLocation.lat + 0.0001],
-                  [userLocation.lng + 0.0002, userLocation.lat + 0.0002],
-                ],
-              },
-              properties: {},
-            },
-          ],
-        } as GeoJSON),
-    };
+    // const response = {
+    //   ok: true,
+    //   json: () =>
+    //     Promise.resolve({
+    //       type: 'FeatureCollection',
+    //       features: [
+    //         {
+    //           type: 'Feature',
+    //           geometry: {
+    //             type: 'LineString',
+    //             coordinates: [
+    //               [userLocation.lng, userLocation.lat],
+    //               [userLocation.lng + 0.0001, userLocation.lat + 0.0001],
+    //               [userLocation.lng + 0.0002, userLocation.lat + 0.0002],
+    //             ],
+    //           },
+    //           properties: {},
+    //         },
+    //       ],
+    //     } as GeoJSON),
+    // };
     setRoute(await response.json());
     setLoading(false);
-  }, []);
+  }, [setLoading, setRoute, selectedRoom, userLocations]);
 
   return { uploadPhotos, searchRoute };
 };

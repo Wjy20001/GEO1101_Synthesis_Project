@@ -7,9 +7,11 @@ import { GeoJSON } from 'geojson';
 const useFloorMap = () => {
   const position = useUserLocation((state) => state.position);
   const selectRoom = useDestination((state) => state.setDestination);
+  const selectedRoom = useDestination((state) => state.destination);
   const route = useRoute((state) => state.route);
   const handleRoomSelect = useCallback(
     (roomId: string | null) => {
+      console.log('room id: ', roomId);
       if (!roomId) return;
       selectRoom(roomId);
     },
@@ -24,6 +26,10 @@ const useFloorMap = () => {
     }),
     [position]
   );
+
+  useEffect(() => {
+    console.log('rooooooooooooo', selectedRoom);
+  }, [selectedRoom]);
 
   const [floorMap, setFloorMap] = useState<GeoJSON | undefined>(undefined);
 

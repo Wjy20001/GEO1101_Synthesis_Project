@@ -16,7 +16,9 @@ const useUserLocation = create<UserLocation>((set) => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
-        set({ position: { lat: latitude, lng: longitude, room: 'room' } });
+        set({
+          position: { lat: latitude, lng: longitude, room: 'main_entrance' },
+        });
         console.log('User location:', { lat: latitude, lng: longitude });
       },
       (error) => {
