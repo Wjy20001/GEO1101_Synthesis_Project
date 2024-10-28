@@ -65,7 +65,11 @@ const Camera = ({ onToggleMode }: CameraProps) => {
 
     try {
       const data = await uploadPhotos(photos);
-      setUserLocation({ lat: data.lat, lng: data.lng });
+      setUserLocation({
+        lat: data.user_coordinate[0],
+        lng: data.user_coordinate[1],
+        room: data.user_room,
+      });
       onToggleMode();
     } catch (error) {
       console.error(error);

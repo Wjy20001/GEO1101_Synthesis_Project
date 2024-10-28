@@ -7,22 +7,24 @@ import {
 } from '../state';
 import { GeoJSON } from 'geojson';
 
-const BASE_URL = 'https://hogehoge.com';
+const BASE_URL = 'https://http://127.0.0.1:8000';
 
 export const useAPI = () => {
   const setLoading = useLoading((state) => state.setLoading);
   const setRoute = useRoute((state) => state.setRoute);
-  const userLocation = useUserLocation((state) => state.position);
+  const userLocations = useUserLocation((state) => state.position);
   const selectedRoom = useDestination((state) => state.destination);
   const uploadPhotos = useCallback(
-    async (photos: File[]): Promise<{ lat: number; lng: number }> => {
+    async (
+      photos: File[]
+    ): Promise<{ user_coordinate: [number, number]; user_room: string }> => {
       setLoading(true);
       const formData = new FormData();
       photos.forEach((photo) => {
         formData.append('photos', photo);
       });
 
-      const response = await fetch(`${BASE_URL}/upload`, {
+      const response = await fetch(`${BASE_URL}/localize`, {
         method: 'POST',
         body: formData,
       });
@@ -39,7 +41,7 @@ export const useAPI = () => {
   const searchRoute = useCallback(async () => {
     setLoading(true);
     // const response = await fetch(
-    //   `${BASE_URL}/navigate?roomName=${roomName}&userLocation=${userLocation.lat},${userLocation.lng}`
+    //   `${BASE_URL}/navigate?roomName=${roomName}&userLocation=${userLocation.room}
     // );
 
     // if (!response.ok) {

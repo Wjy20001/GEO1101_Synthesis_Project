@@ -9,8 +9,8 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse
 
 # Importing custom functions
-from get_room_name import get_file_paths, get_room_name
-from routing import navigation
+from API.get_room_name import get_file_paths, get_room_name
+from API.routing import navigation
 from functions_framework import http
 
 API_FOLDER_PATH = os.path.join(os.getcwd(), "API")

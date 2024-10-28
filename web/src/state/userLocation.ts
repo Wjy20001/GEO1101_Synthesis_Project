@@ -3,6 +3,7 @@ import { create } from 'zustand';
 interface Position {
   lat: number;
   lng: number;
+  room: string;
 }
 
 interface UserLocation {
@@ -15,7 +16,7 @@ const useUserLocation = create<UserLocation>((set) => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
-        set({ position: { lat: latitude, lng: longitude } });
+        set({ position: { lat: latitude, lng: longitude, room: 'room' } });
         console.log('User location:', { lat: latitude, lng: longitude });
       },
       (error) => {
@@ -29,7 +30,11 @@ const useUserLocation = create<UserLocation>((set) => {
 
   // Set the default position
   return {
-    position: { lat: 52.005668180596146, lng: 4.37070135981498 },
+    position: {
+      lat: 52.005668180596146,
+      lng: 4.37070135981498,
+      room: 'hall_p',
+    },
     setLocation: (position) => set({ position }),
   };
 });
