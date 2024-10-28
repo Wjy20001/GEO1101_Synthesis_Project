@@ -272,7 +272,7 @@
       "type": "Feature",
       "properties": {
         "id": 6,
-        "room": "R1"
+        "room": "hall_d"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -420,7 +420,7 @@
       "type": "Feature",
       "properties": {
         "id": 9,
-        "room": "hall_d"
+        "room": "R1"
       },
       "geometry": {
         "type": "MultiPolygon",
