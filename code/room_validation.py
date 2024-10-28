@@ -88,7 +88,7 @@ if __name__ == "__main__":
     diagnostics_toggle = False
 
     # (DBSCAN) parameters
-    N_best_matches: int = 6 #default=6 
+    N_best_matches: int = 5 #default=6 
     min_DBSCAN_samples: int = 2 #default=3
 
 
