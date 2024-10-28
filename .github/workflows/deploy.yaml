@@ -66,8 +66,8 @@ jobs:
             --entry-point handle_request \
             --project ${{ secrets.GCP_PROJECT_ID }} \
             --region europe-west1 \
-            --timeout=60s \
-            --memory=256MB \
+            --timeout=300s \
+            --memory=2GB \
             --set-env-vars environment=production \
             --source API/
 
