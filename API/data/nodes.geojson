@@ -12,7 +12,7 @@
       "type": "Feature",
       "properties": {
         "id": 0,
-        "label": "entrance",
+        "label": "main_entrance",
         "neighbors": "1",
         "weights": null
       },
