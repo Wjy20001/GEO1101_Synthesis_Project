@@ -4,7 +4,7 @@ import torch
 import torchvision.models as models
 import torchvision.transforms as transforms
 from PIL import Image
-
+from tqdm import tqdm
 # from const import GROUND_TRUTH_PATH, USER_IMAGE_PATH, CACHE_PATH  # Import path variables from const.py
 
 
@@ -56,7 +56,7 @@ def preprocess_reference_images(GROUND_TRUTH_PATH, output_file):
 
     ref_vgg16_features = []  # List to store extracted feature vectors
 
-    for image_path in ref_image_paths:
+    for image_path in tqdm(ref_image_paths):
         # Extract VGG16 features
         features = extract_vgg16_features(image_path, model, transform)
         ref_vgg16_features.append(features)
@@ -73,7 +73,7 @@ def preprocess_reference_images(GROUND_TRUTH_PATH, output_file):
 
 # Start processing
 if __name__ == "__main__":
-    ground_truth_path = os.path.join("data", "training")
+    ground_truth_path = os.path.join("data", "BK_slam_images2")
     output_file = os.path.join("data", "training", "model.pkl")
 
     preprocess_reference_images(ground_truth_path, output_file)

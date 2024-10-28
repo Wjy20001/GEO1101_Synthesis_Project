@@ -12,7 +12,7 @@
       "type": "Feature",
       "properties": {
         "id": 0,
-        "label": "entrance",
+        "label": "main_entrance",
         "neighbors": "1",
         "weights": null
       },
@@ -412,7 +412,7 @@
       "type": "Feature",
       "properties": {
         "id": 25,
-        "label": "hall_d",
+        "label": "R1",
         "neighbors": "22, 24",
         "weights": null
       },
@@ -732,7 +732,7 @@
       "type": "Feature",
       "properties": {
         "id": 45,
-        "label": "R1",
+        "label": "hall_d",
         "neighbors": "44",
         "weights": null
       },

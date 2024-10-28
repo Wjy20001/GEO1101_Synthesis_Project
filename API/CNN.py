@@ -51,7 +51,7 @@ def extract_coordinates_from_match(ref_image_path, csv_path):
 
 
 # Perform DBSCAN clustering and return the coordinates of the largest cluster's center
-def apply_dbscan_and_find_center(all_coords, eps=0.5, min_samples=3):
+def apply_dbscan_and_find_center(all_coords, eps=2, min_samples=3):
     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
     labels = dbscan.fit_predict(all_coords)
 
