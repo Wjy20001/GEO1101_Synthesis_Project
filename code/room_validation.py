@@ -60,11 +60,11 @@ def print_statistics(df: pd.DataFrame, toggle: bool) -> None:
 if __name__ == "__main__":
     #define paths
     
-    csv_path_validation: str = os.path.join("data", "csvs", "room_validation_linkage_single.csv")
-    rooms_json_path: str = os.path.join("data", "floorplans", "BK_floorplan_latlong.geojson")
+    csv_path_validation: str = os.path.join("data", "csvs", "image_validation_linkage.csv")
+    rooms_json_path: str = os.path.join("API", "data", "floorplan.geojson")
 
-    reference_data_file: str = os.path.join("data", "training", 'reference_vgg16_data.pkl')
-    csv_path_coord: str = os.path.join("data", "csvs", "slam_camera_coordinates_merged.csv")
+    reference_data_file: str = os.path.join("data", "training", 'model.pkl')
+    csv_path_coord: str = os.path.join("data", "csvs", "slam_camera_coordinates_merged_v2.csv")
     user_image_folder: str = os.path.join("data", "user_images")
 
     #disable a warning message for debugging
