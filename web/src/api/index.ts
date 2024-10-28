@@ -5,9 +5,11 @@ import {
   useRoute,
   useUserLocation,
 } from '../state';
-import { GeoJSON } from 'geojson';
 
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://synthesis-proj.netlify.app'
+    : 'http://127.0.0.1:8000';
 
 export const useAPI = () => {
   const setLoading = useLoading((state) => state.setLoading);
@@ -39,7 +41,6 @@ export const useAPI = () => {
   );
 
   const searchRoute = useCallback(async () => {
-    console.log('selected room: ', selectedRoom);
     if (!selectedRoom || !userLocations.room) return;
 
     setLoading(true);
@@ -47,37 +48,9 @@ export const useAPI = () => {
       `${BASE_URL}/navigate?start_room_name=${userLocations.room}&end_room_name=${selectedRoom}`
     );
 
-    // if (!response.ok) {
-    //   throw new Error('Failed to search route');
-    // }
-    // Simulating a delay of 1 second for debugging purposes
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Mocking the API response for debugging
-    // const response = {
-    //   ok: true,
-    //   json: () =>
-    //     Promise.resolve({
-    //       type: 'FeatureCollection',
-    //       features: [
-    //         {
-    //           type: 'Feature',
-    //           geometry: {
-    //             type: 'LineString',
-    //             coordinates: [
-    //               [userLocation.lng, userLocation.lat],
-    //               [userLocation.lng + 0.0001, userLocation.lat + 0.0001],
-    //               [userLocation.lng + 0.0002, userLocation.lat + 0.0002],
-    //             ],
-    //           },
-    //           properties: {},
-    //         },
-    //       ],
-    //     } as GeoJSON),
-    // };
     setRoute(await response.json());
     setLoading(false);
-  }, [setLoading, setRoute, selectedRoom, userLocations]);
+  }, [setLoading, setRoute, selectedRoom, userLocations.room]);
 
   return { uploadPhotos, searchRoute };
 };
