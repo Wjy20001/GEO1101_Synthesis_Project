@@ -71,7 +71,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
               type: 'line',
               source: 'route',
               paint: {
-                'line-color': '#349ACD',
+                'line-color': '#fff',
                 'line-width': 5,
               },
             });

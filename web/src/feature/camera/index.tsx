@@ -37,7 +37,7 @@ const Camera = ({ onToggleMode }: CameraProps) => {
   const setUserLocation = useUserLocation((state) => state.setLocation);
   const loading = useLoading((state) => state.loading);
   const setLoading = useLoading((state) => state.setLoading);
-  const uploadPhotos = useAPI().uploadPhotos;
+  const { uploadPhotos } = useAPI();
 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
@@ -65,7 +65,11 @@ const Camera = ({ onToggleMode }: CameraProps) => {
 
     try {
       const data = await uploadPhotos(photos);
-      setUserLocation({ lat: data.lat, lng: data.lng });
+      setUserLocation({
+        lat: data.user_coordinate[1],
+        lng: data.user_coordinate[0],
+        room: data.user_room,
+      });
       onToggleMode();
     } catch (error) {
       console.error(error);

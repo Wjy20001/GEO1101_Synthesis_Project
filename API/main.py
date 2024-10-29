@@ -9,9 +9,10 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse
 
 # Importing custom functions
-from get_room_name import get_file_paths, get_room_name
-from routing import navigation
+from API.get_room_name import get_file_paths, get_room_name
+from API.routing import navigation
 from functions_framework import http
+from fastapi.middleware.cors import CORSMiddleware
 
 API_FOLDER_PATH = os.path.join(os.getcwd(), "API")
 data_path = os.path.join(API_FOLDER_PATH, "data")
@@ -19,6 +20,19 @@ data_path = os.path.join(API_FOLDER_PATH, "data")
 
 # Create FastAPI instance
 app = FastAPI()
+allowed_origins = [
+    "*",
+    "http://localhost:9000",
+    "https://synthesis-proj.netlify.app/",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Ensure the user_data_cache folder exists
 cache_dir = os.path.join(API_FOLDER_PATH, "user_data_cache")
@@ -67,6 +81,7 @@ async def main():
 
 @app.post("/localize/")
 async def upload_images(files: List[UploadFile] = File(...)):
+    print("hooo--------------")
     """
     Handles image uploads, saves them to a directory, and calculates the user position based on the images.
 
@@ -146,10 +161,8 @@ async def upload_images(files: List[UploadFile] = File(...)):
     )
 
 
-@app.post("/navigate/")
-async def find_route(
-    start_room_name: str = Form(...), end_room_name: str = Form(...)
-):
+@app.get("/navigate/")
+async def find_route(start_room_name: str, end_room_name: str):
     floorplan_json_path = os.path.join(data_path, "floorplan.geojson")
     nodes_json_path = os.path.join(data_path, "nodes.geojson")
     route_json_path = os.path.join(

@@ -5,24 +5,28 @@ import {
   useRoute,
   useUserLocation,
 } from '../state';
-import { GeoJSON } from 'geojson';
 
-const BASE_URL = 'https://hogehoge.com';
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://synthesis-proj.netlify.app'
+    : 'http://127.0.0.1:8000';
 
 export const useAPI = () => {
   const setLoading = useLoading((state) => state.setLoading);
   const setRoute = useRoute((state) => state.setRoute);
-  const userLocation = useUserLocation((state) => state.position);
+  const userLocations = useUserLocation((state) => state.position);
   const selectedRoom = useDestination((state) => state.destination);
   const uploadPhotos = useCallback(
-    async (photos: File[]): Promise<{ lat: number; lng: number }> => {
+    async (
+      photos: File[]
+    ): Promise<{ user_coordinate: [number, number]; user_room: string }> => {
       setLoading(true);
       const formData = new FormData();
       photos.forEach((photo) => {
-        formData.append('photos', photo);
+        formData.append('files', photo);
       });
 
-      const response = await fetch(`${BASE_URL}/upload`, {
+      const response = await fetch(`${BASE_URL}/localize`, {
         method: 'POST',
         body: formData,
       });
@@ -37,42 +41,16 @@ export const useAPI = () => {
   );
 
   const searchRoute = useCallback(async () => {
+    if (!selectedRoom || !userLocations.room) return;
+
     setLoading(true);
-    // const response = await fetch(
-    //   `${BASE_URL}/navigate?roomName=${roomName}&userLocation=${userLocation.lat},${userLocation.lng}`
-    // );
+    const response = await fetch(
+      `${BASE_URL}/navigate?start_room_name=${userLocations.room}&end_room_name=${selectedRoom}`
+    );
 
-    // if (!response.ok) {
-    //   throw new Error('Failed to search route');
-    // }
-    // Simulating a delay of 1 second for debugging purposes
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Mocking the API response for debugging
-    const response = {
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          type: 'FeatureCollection',
-          features: [
-            {
-              type: 'Feature',
-              geometry: {
-                type: 'LineString',
-                coordinates: [
-                  [userLocation.lng, userLocation.lat],
-                  [userLocation.lng + 0.0001, userLocation.lat + 0.0001],
-                  [userLocation.lng + 0.0002, userLocation.lat + 0.0002],
-                ],
-              },
-              properties: {},
-            },
-          ],
-        } as GeoJSON),
-    };
     setRoute(await response.json());
     setLoading(false);
-  }, []);
+  }, [setLoading, setRoute, selectedRoom, userLocations.room]);
 
   return { uploadPhotos, searchRoute };
 };
