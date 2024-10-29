@@ -44,6 +44,7 @@ if os.getenv("ENVIRONMENT") == "production":
     )  # Get from external server URL
 else:
     reference_data_file = os.path.join(data_path, "model.pkl")
+print("reference data file:", reference_data_file)
 with open(reference_data_file, "rb") as f:
     ref_image_paths, ref_vgg16_features = pickle.load(f)
 
