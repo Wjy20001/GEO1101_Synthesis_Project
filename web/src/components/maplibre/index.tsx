@@ -21,6 +21,7 @@ interface MapLibreProps {
   initialCamerea?: Camerea;
   maxBounds?: [[number, number], [number, number]];
   userLocation?: UserLocation;
+  userRoom?: string;
   route?: GeoJSON;
   indoorMap?: GeoJSON;
   onRoomClick?: (room: string) => void;
@@ -34,6 +35,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
     route,
     indoorMap,
     onRoomClick,
+    userRoom,
   }) => {
     const {
       center: initialCenter,
@@ -207,6 +209,25 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
 
             // Start the animation
             animatePulse();
+
+            if (userRoom) {
+              map.addLayer({
+                id: 'user-room-label',
+                type: 'symbol',
+                source: 'user-location',
+                layout: {
+                  'text-field': ['concat', 'You are in: ', userRoom],
+                  'text-anchor': 'top',
+                  'text-offset': [0, 1.5],
+                  'text-size': 14,
+                },
+                paint: {
+                  'text-color': '#ffffff',
+                  'text-halo-color': '#000000',
+                  'text-halo-width': 1,
+                },
+              });
+            }
           }
 
           // Add Orientation Indicator Layer
@@ -253,7 +274,9 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
       initialPitch,
       initialBearing,
       maxBounds,
-      userLocation, // Added userLocation to dependency array
+      userLocation,
+      indoorMap,
+      onRoomClick,
       route,
     ]);
 

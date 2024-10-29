@@ -12,6 +12,7 @@ const FloorMap = React.memo(({}: FloorMapProps) => {
     indoorMap,
     route,
     handleRoomSelect,
+    userRoom,
   } = useHooks();
 
   return (
@@ -22,6 +23,7 @@ const FloorMap = React.memo(({}: FloorMapProps) => {
       indoorMap={indoorMap}
       onRoomClick={handleRoomSelect}
       route={route}
+      userRoom={userRoom}
     ></MapLibre>
   );
 });

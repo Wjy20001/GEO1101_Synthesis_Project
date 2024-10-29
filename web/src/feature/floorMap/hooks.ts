@@ -6,6 +6,7 @@ import { GeoJSON } from 'geojson';
 
 const useFloorMap = () => {
   const position = useUserLocation((state) => state.position);
+
   const selectRoom = useDestination((state) => state.setDestination);
   const selectedRoom = useDestination((state) => state.destination);
   const route = useRoute((state) => state.route);
@@ -66,6 +67,7 @@ const useFloorMap = () => {
     indoorMap: floorMap,
     route,
     handleRoomSelect,
+    userRoom: position.room,
   };
 };
 
