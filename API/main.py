@@ -5,8 +5,9 @@ import shutil
 import subprocess
 from typing import List
 
-from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse
+import requests
 
 # Importing custom functions
 from API.get_room_name import get_file_paths, get_room_name
@@ -42,11 +43,15 @@ if os.getenv("ENVIRONMENT") == "production":
     reference_data_file = os.getenv(
         "REFERENCE_DATA_URL"
     )  # Get from external server URL
+    if not reference_data_file:
+        raise ValueError("REFERENCE_DATA_URL is not set")
+    response = requests.get(reference_data_file)
+    ref_image_paths, ref_vgg16_features = pickle.loads(response.content)
 else:
     reference_data_file = os.path.join(data_path, "model.pkl")
-print("reference data file:", reference_data_file)
-with open(reference_data_file, "rb") as f:
-    ref_image_paths, ref_vgg16_features = pickle.load(f)
+    print("reference data file:", reference_data_file)
+    with open(reference_data_file, "rb") as f:
+        ref_image_paths, ref_vgg16_features = pickle.load(f)
 
 
 @app.get("/")
