@@ -10,8 +10,8 @@ from fastapi.responses import HTMLResponse, JSONResponse
 import requests
 
 # Importing custom functions
-from API.get_room_name import get_file_paths, get_room_name
-from API.routing import navigation
+from get_room_name import get_file_paths, get_room_name
+from routing import navigation
 from functions_framework import http
 from fastapi.middleware.cors import CORSMiddleware
 
