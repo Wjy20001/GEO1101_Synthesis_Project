@@ -1,8 +1,9 @@
 import json
 import os
 from math import sqrt
-
+from shapely.geometry import shape, Point
 import networkx as nx
+import geopandas as gpd
 
 
 def build_graph(nodes_json_path):
@@ -79,6 +80,26 @@ def path_to_linestring(path, G):
 
     return linestring_geojson
 
+# Helper function to update edge weights
+def update_edge_weights_for_restricted_rooms(G, floorplan, restricted_rooms, new_weight=float('inf')):
+    
+    # Filter to get only the polygons for restricted rooms using geopandas
+    floorplan_gdf = gpd.GeoDataFrame.from_features(floorplan["features"])
+    restricted_gdf = floorplan_gdf[floorplan_gdf['room'].isin(restricted_rooms)]
+
+    print('-' * 60)
+    print(f'Setting weights of edges within restricted rooms: {restricted_rooms}')
+    # Iterate over nodes and update weights of their connected edges if the node is within a restricted room
+    for node_id, node_data in G.nodes(data=True):
+        node_point = Point(node_data['coordinates'])  # Assuming 'pos' is (x, y) for each node
+        if any(restricted_poly.contains(node_point) for restricted_poly in restricted_gdf.geometry):
+            # Update weights of all edges connected to this node
+            
+            # print(f'\tFound node {node_id}')
+            for neighbor in G.neighbors(node_id):
+                G[node_id][neighbor]['weight'] = new_weight
+                # print(f'\t\tRaise edge weight with node {neighbor} to {new_weight}')
+
 
 def navigation(
     start: str,
@@ -86,13 +107,19 @@ def navigation(
     floorplan_json_path: str,
     nodes_json_path: str,
     route_output_path: str,
+    restricted_rooms: list = []
 ):
 
     # Loading the floorplan containing the rooms
     floorplan = json.load(open(floorplan_json_path, "r", encoding="utf-8"))
 
+
     # build the graph using the nodes json
     Graph = build_graph(nodes_json_path)
+
+    if restricted_rooms:
+        update_edge_weights_for_restricted_rooms(Graph, floorplan, restricted_rooms)
+
 
     start_node_id = get_room_id(start, Graph)
     end_node_id = get_room_id(end, Graph)
@@ -123,20 +150,20 @@ def navigation(
     print(f"GeoJSON LineString saved to '{folder_and_filename}'.")
 
 
+
+
+
 if __name__ == "__main__":
 
     # building_edge_path = os.path.join("data", "routing", "boundary.geojson")
-    nodes_json_path = os.path.join("API", "data", "nodes_latlong.geojson")
-    floorplan_json_path = os.path.join(
-        "API", "data", "floorplan_latlong.geojson"
-    )
-    route_output_path = os.path.join(
-        "API", "user_data_cache", "routing.geojson"
-    )
+    nodes_json_path = os.path.join("API", "data", "nodes.geojson")
+    floorplan_json_path = os.path.join("API", "data", "floorplan.geojson")
+    route_output_path = os.path.join("API", "user_data_cache", "routing.geojson")
 
     start = "geolab"
-    end = "entrance"
+    end = "main_entrance"
 
-    navigation(
-        start, end, floorplan_json_path, nodes_json_path, route_output_path
-    )
+    #name of polygons that should be restricted while getting routing
+    restricted_rooms = []
+
+    navigation(start, end, floorplan_json_path, nodes_json_path, route_output_path, restricted_rooms)
