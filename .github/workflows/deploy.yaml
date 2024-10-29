@@ -1,4 +1,4 @@
-name: Deploy FastAPI to Google Cloud Functions
+name: Deploy FastAPI to Google Cloud Run
 
 on:
   push:
@@ -18,30 +18,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      # - name: Install Poetry
-      #   run: |
-      #     curl -sSL https://install.python-poetry.org | python3 -
-      #     echo "::add-path::$HOME/.local/bin"
-
-      # - name: Export requirements.txt
-      #   run: |
-      #     poetry export -f requirements.txt --output requirements.txt --without-hashes
-
-      # - name: Move API files to Root
-      #   run: |
-      #     if [ -d "API" ]; then
-      #       echo "Moving files from API/ to root directory..."
-      #       # First, create necessary directories
-      #       mkdir -p data
-      #       # Copy all files except .pickle files in data directory
-      #       find API -type f ! -path "API/data/*.pkl" -exec cp --parents {} . \;
-      #       # Copy hidden files
-      #       cp -r API/.[!.]* .  2>/dev/null || true
-      #       rm -rf API
-      #     else
-      #       echo "API/ directory does not exist. Skipping move."
-      #     fi
-
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -53,23 +29,36 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           install_components: "beta"
 
-      - name: List up directories
-        run: |
-          ls -la
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Deploy to Google Cloud Functions
+      - name: Login to Google Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: gcr.io
+          username: _json_key
+          password: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/synthesis-api:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to Cloud Run
         run: |
-          gcloud functions deploy synthesis-api \
-            --runtime python311 \
-            --trigger-http \
-            --allow-unauthenticated \
-            --entry-point handle_request \
-            --project ${{ secrets.GCP_PROJECT_ID }} \
+          gcloud run deploy synthesis-api \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/synthesis-api:latest \
+            --platform managed \
             --region europe-west1 \
-            --timeout=300s \
-            --memory=2GB \
-            --set-env-vars="ENVIRONMENT=production,REFERENCE_DATA_URL=${{ secrets.REFERENCE_DATA_URL }}" \
-            --source API/
+            --allow-unauthenticated \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --memory 2Gi \
+            --timeout 300s \
+            --set-env-vars="ENVIRONMENT=production,REFERENCE_DATA_URL=${{ secrets.REFERENCE_DATA_URL }}"
 
       # Optional: Post-deployment verification or notifications
       # - name: Verify Deployment
@@ -83,7 +72,7 @@ jobs:
       #   with:
       #     payload: |
       #       {
-      #         "text": "FastAPI application has been successfully deployed to Google Cloud Functions."
+      #         "text": "FastAPI application has been successfully deployed to Google Cloud Run."
       #       }
       #   env:
       #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
