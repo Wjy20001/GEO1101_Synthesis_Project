@@ -3,7 +3,7 @@ name: Deploy FastAPI to Google Cloud Run
 on:
   push:
     branches:
-      - prod
+      - main
 
 jobs:
   deploy:
