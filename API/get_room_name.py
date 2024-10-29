@@ -5,7 +5,7 @@ from shapely.geometry import Point
 import geopandas as gpd
 
 
-from CNN import match_query_images_and_get_center
+from API.CNN import match_query_images_and_get_center
 
 # define standard CRS transformer 28992 -> 4326
 CRS28992_4326 = Transformer.from_crs(

@@ -10,8 +10,8 @@ from fastapi.responses import HTMLResponse, JSONResponse
 import requests
 
 # Importing custom functions
-from get_room_name import get_file_paths, get_room_name
-from routing import navigation
+from API.get_room_name import get_file_paths, get_room_name
+from API.routing import navigation
 from functions_framework import http
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -234,5 +234,11 @@ def handle_request(request: Request):
 if __name__ == "__main__":
     # Run the FastAPI app using Uvicorn when executed as a script
     import uvicorn
+    import os
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8080))
+    if port is None:
+        port = 8000
+
+    # For Cloud Run, always use 0.0.0.0 as host
+    uvicorn.run(app, host="0.0.0.0", port=port)

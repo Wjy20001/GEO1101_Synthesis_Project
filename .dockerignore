@@ -1,0 +1,72 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+.github/
+.gcloudignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+*$py.class
+.pytest_cache
+.coverage
+htmlcov/
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Project specific
+*.log
+*.csv
+*.jpg
+*.jpeg
+*.png
+*.pkl
+*.geojson
+data/
+code/
+API/data/input_images/
+API/data/user_data_cache/
+!data/floorplan.geojson
+!data/nodes.geojson
+!data/slam_coordinates.csv
+
+# Documentation
+README.md
+CHANGELOG.md
+docs/
+
+# Development
+tests/
+notebooks/
+.ipynb_checkpoints
+*.ipynb
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
