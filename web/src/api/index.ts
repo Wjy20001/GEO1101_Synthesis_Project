@@ -8,7 +8,7 @@ import {
 
 const BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://synthesis-proj.netlify.app'
+    ? 'https://europe-west1-hideba-425108.cloudfunctions.net/synthesis-api'
     : 'http://127.0.0.1:8000';
 
 export const useAPI = () => {

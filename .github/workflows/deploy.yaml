@@ -68,7 +68,7 @@ jobs:
             --region europe-west1 \
             --timeout=300s \
             --memory=2GB \
-            --set-env-vars ENVIRONMENT=production REFERENCE_DATA_URL=${{ secrets.REFERENCE_DATA_URL }} \
+            --set-env-vars="ENVIRONMENT=production,REFERENCE_DATA_URL=${{ secrets.REFERENCE_DATA_URL }}" \
             --source API/
 
       # Optional: Post-deployment verification or notifications

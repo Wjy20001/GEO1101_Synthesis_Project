@@ -41,9 +41,6 @@ def point_in_polygon(point: tuple[float, float], geojson_file_path: str):
             f"GeoJSON file '{geojson_file_path}' not found."
         )
 
-    print("x:", x)
-    print("y:", y)
-
     # Read GeoJSON file into GeoDataFrame and transform to Dutch coordinate system (EPSG:28992)
     gdf = gpd.read_file(geojson_file_path)
     gdf = gdf.to_crs("EPSG:28992")

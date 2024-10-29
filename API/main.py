@@ -69,7 +69,7 @@ async def main():
                 <input type="submit" value="Localize" style="padding: 10px 20px;">
             </form>
             <h2>Navigate</h2>
-            <form action="/navigate" method="post">
+            <form action="/navigate" method="get">
                 <label for="start_room_name">Enter Start Room:</label>
                 <input type="text" id="start_room_name" name="start_room_name" required style="display: block; margin-bottom: 10px;">
 
@@ -87,7 +87,6 @@ async def main():
 
 @app.post("/localize/")
 async def upload_images(files: List[UploadFile] = File(...)):
-    print("hooo--------------")
     """
     Handles image uploads, saves them to a directory, and calculates the user position based on the images.
 
