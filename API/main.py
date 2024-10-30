@@ -25,7 +25,6 @@ allowed_origins = [
     "http://localhost:9000",
     "https://synthesis-proj.netlify.app",
     "http://localhost:8080",
-    "https://localhost:8080",
 ]
 
 app.add_middleware(
