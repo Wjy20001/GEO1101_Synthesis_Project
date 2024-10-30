@@ -8,7 +8,7 @@ import {
 
 const BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://europe-west1-hideba-425108.cloudfunctions.net/synthesis-api'
+    ? 'https://synthesis-api-264879243442.europe-west1.run.app'
     : 'http://127.0.0.1:8000';
 
 export const useAPI = () => {
