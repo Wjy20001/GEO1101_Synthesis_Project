@@ -98,7 +98,7 @@ async def main():
     return HTMLResponse(content=content)
 
 
-@app.post("/localize/")
+@app.post("/localize")
 async def upload_images(files: List[UploadFile] = File(...)):
     """
     Handles image uploads, saves them to a directory, and calculates the user position based on the images.
@@ -179,7 +179,7 @@ async def upload_images(files: List[UploadFile] = File(...)):
     )
 
 
-@app.get("/navigate/")
+@app.get("/navigate")
 async def find_route(start_room_name: str, end_room_name: str):
     floorplan_json_path = os.path.join(data_path, "floorplan.geojson")
     nodes_json_path = os.path.join(data_path, "nodes.geojson")
@@ -254,4 +254,4 @@ if __name__ == "__main__":
         port = 8000
 
     # For Cloud Run, always use 0.0.0.0 as host
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app)
