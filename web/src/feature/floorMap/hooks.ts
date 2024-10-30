@@ -1,14 +1,18 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { useDestination, useRoute, useUserLocation } from '../../state';
+import {
+  useDestination,
+  useRoute,
+  useUserGPS,
+  useUserLocation,
+} from '../../state';
 import { Camerea, UserLocation } from '../../components/maplibre';
 import indoorMap from '../../assets/floorplan.geojson';
 import { GeoJSON } from 'geojson';
 
 const useFloorMap = () => {
   const position = useUserLocation((state) => state.position);
-
+  const userGPS = useUserGPS((state) => state.position);
   const selectRoom = useDestination((state) => state.setDestination);
-  const selectedRoom = useDestination((state) => state.destination);
   const route = useRoute((state) => state.route);
   const handleRoomSelect = useCallback(
     (roomId: string | null) => {
@@ -63,6 +67,7 @@ const useFloorMap = () => {
     route,
     handleRoomSelect,
     userRoom: position.room,
+    userGPS,
   };
 };
 

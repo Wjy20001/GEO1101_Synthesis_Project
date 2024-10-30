@@ -25,6 +25,7 @@ interface MapLibreProps {
   route?: GeoJSON;
   indoorMap?: GeoJSON;
   onRoomClick?: (room: string) => void;
+  userGPS?: { lat: number; lng: number };
 }
 
 const MapLibre: React.FC<MapLibreProps> = React.memo(
@@ -36,6 +37,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
     indoorMap,
     onRoomClick,
     userRoom,
+    userGPS,
   }) => {
     const {
       center: initialCenter,
@@ -52,17 +54,16 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
           container: mapContainer.current,
           style:
             'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-          center: initialCenter, // Initial center
-          zoom: initialZoom, // Initial zoom
-          pitch: initialPitch, // Initial pitch
-          bearing: initialBearing, // Initial bearing
-          maxBounds: maxBounds, // Constrain the map view to the specified bounds
+          center: initialCenter,
+          zoom: initialZoom,
+          pitch: initialPitch,
+          bearing: initialBearing,
+          maxBounds: maxBounds,
         });
 
         let animationFrameId: number;
 
         map.on('load', () => {
-          // Add line string
           if (route) {
             map.addSource('route', {
               type: 'geojson',
@@ -72,11 +73,35 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
               id: 'route',
               type: 'line',
               source: 'route',
+              layout: {
+                'line-cap': 'round',
+                'line-join': 'round',
+              },
               paint: {
                 'line-color': '#fff',
                 'line-width': 5,
+                'line-opacity': 0,
               },
             });
+
+            let opacity = 0;
+            const duration = 3000;
+            const startTime = performance.now();
+
+            function animate(currentTime: number) {
+              const elapsed = (currentTime - startTime) % duration;
+              const progress = elapsed / duration;
+
+              // Create a sine wave pattern for smooth repeating fade
+              opacity = (Math.sin(progress * Math.PI * 2) + 1) / 2;
+              // Or use this for fade in-out pattern:
+              // opacity = progress <= 0.5 ? progress * 2 : 2 - (progress * 2);
+
+              map.setPaintProperty('route', 'line-opacity', opacity);
+              animationFrameId = requestAnimationFrame(animate);
+            }
+
+            animationFrameId = requestAnimationFrame(animate);
           }
           if (indoorMap) {
             map.addSource('floor-map', {
@@ -134,6 +159,53 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
           map.on('mouseleave', 'floor-map', () => {
             map.getCanvas().style.cursor = '';
           });
+
+          if (userGPS) {
+            console.log('userGPS', userGPS);
+            map.addSource('user-gps', {
+              type: 'geojson',
+              data: {
+                type: 'FeatureCollection',
+                features: [
+                  {
+                    type: 'Feature',
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [userGPS.lng, userGPS.lat],
+                    },
+                    properties: {},
+                  },
+                ],
+              },
+            });
+            map.addLayer({
+              id: 'user-gps',
+              type: 'circle',
+              source: 'user-gps',
+              paint: {
+                'circle-radius': 10,
+                'circle-color': '#FF9900',
+                'circle-opacity': 0.6,
+                'circle-blur': 1,
+              },
+            });
+            map.addLayer({
+              id: 'user-gps-label',
+              type: 'symbol',
+              source: 'user-gps',
+              layout: {
+                'text-field': ['concat', 'GNSS Location'],
+                'text-anchor': 'top',
+                'text-offset': [0, 1.5],
+                'text-size': 14,
+              },
+              paint: {
+                'text-color': '#ffffff',
+                'text-halo-color': '#000000',
+                'text-halo-width': 1,
+              },
+            });
+          }
 
           if (userLocation) {
             map.addSource('user-location', {
@@ -277,6 +349,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
       indoorMap,
       userRoom,
       onRoomClick,
+      userGPS,
       route,
     ]);
 

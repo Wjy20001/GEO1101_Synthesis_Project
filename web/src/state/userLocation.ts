@@ -12,25 +12,6 @@ interface UserLocation {
 }
 
 const useUserLocation = create<UserLocation>((set) => {
-  if (navigator.geolocation) {
-    // navigator.geolocation.getCurrentPosition(
-    //   (pos) => {
-    //     const { latitude, longitude } = pos.coords;
-    //     set({
-    //       position: { lat: latitude, lng: longitude, room: 'main_entrance' },
-    //     });
-    //     console.log('User location:', { lat: latitude, lng: longitude });
-    //   },
-    //   (error) => {
-    //     console.error('Geolocation error:', error);
-    //     // Optionally handle the error or keep the default position
-    //   }
-    // );
-  } else {
-    console.warn('Geolocation is not supported by this browser.');
-  }
-
-  // Set the default position
   return {
     position: {
       lat: 52.00585831525125,
