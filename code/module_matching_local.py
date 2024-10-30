@@ -66,7 +66,7 @@ def apply_dbscan_and_find_center(all_coords, eps=2, min_samples=3):
             largest_cluster_size = len(label_coords)
             label_coords = np.array(label_coords)
             largest_cluster_center = np.mean(label_coords, axis=0)
-    print(f'largest DBSCAN cluster center =\t{largest_cluster_center}')
+    # print(f'largest DBSCAN cluster center =\t{largest_cluster_center}')
     return tuple(largest_cluster_center)
 
 # Load preprocessed reference data and match query images
@@ -87,7 +87,7 @@ def match_query_images_and_get_center(query_image_paths, reference_data_file, cs
     
     # Process each query image
     for query_image_path in query_image_paths:
-        print(f"Processing query image: {query_image_path}")
+        # print(f"Processing query image: {query_image_path}")
 
         # Extract VGG16 features for the query image
         query_features = extract_vgg16_features(query_image_path, model, transform)
@@ -112,8 +112,8 @@ def match_query_images_and_get_center(query_image_paths, reference_data_file, cs
             all_coords.append(coord)
 
     # Perform DBSCAN clustering on all matched image coordinates and return the center of the largest cluster
-    print('-' * 30)
-    print(f'Starting DBSCAN with {len(all_coords)} coordinates')
+    # print('-' * 20)
+    # print(f'Starting DBSCAN with {len(all_coords)} coordinates')
     largest_cluster_center = apply_dbscan_and_find_center(all_coords, min_samples=min_DBSCAN_samples)
     
     return largest_cluster_center
