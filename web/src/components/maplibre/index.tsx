@@ -120,7 +120,6 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
               if (e.features && e.features.length > 0) {
                 const feature = e.features[0];
                 const properties = feature.properties;
-                console.log('Clicked room:', properties.room);
                 if (onRoomClick) {
                   onRoomClick(properties.room);
                 }
@@ -276,6 +275,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
       maxBounds,
       userLocation,
       indoorMap,
+      userRoom,
       onRoomClick,
       route,
     ]);
