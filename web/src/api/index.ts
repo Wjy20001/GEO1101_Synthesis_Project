@@ -6,7 +6,7 @@ import {
   useUserLocation,
 } from '../state';
 
-const BASE_URL = process.env.API_ENDPOINT || 'http://127.0.0.1:8000';
+const BASE_URL = 'https://synthesis-api-264879243442.europe-west1.run.app';
 
 export const useAPI = () => {
   const setLoading = useLoading((state) => state.setLoading);
