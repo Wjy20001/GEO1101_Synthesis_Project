@@ -77,33 +77,33 @@ if __name__ == "__main__":
     df_full['position_id'] = df_full['position_id'].astype(int)
 
 
-    diagnostics_toggle = 'multi'   # 'single' or 'multi'
-    N_best_matches = 3 #default = 6
-    min_DBSCAN_samples = 1 #default = 3
+    diagnostics_toggle = 'single'   # 'single' or 'multi'
+    N_best_matches = 1 #default = 6
+    cluster_size = 1 #default = 3
 
-    for cluster_size in tqdm(range(1, 6), desc='cluster_size'):
-        #define how to save diagnostics
-        diagnostics_csv_path = os.path.join("data", "diagnostics", f"diagnostics_{diagnostics_toggle}_N={N_best_matches}_cs={cluster_size}.csv")
-        
-        if diagnostics_toggle == 'single':
-            # For individual images
-            df_full[['found_room', 'calculation_time']] = df_full['user_image_name'].apply(
-                lambda x: get_room_name_and_time(x, rooms_json_path, N_best_matches)
-            ).apply(pd.Series)
+    # for cluster_size in tqdm(range(1, 6), desc='cluster_size'):
+    #define how to save diagnostics
+    diagnostics_csv_path = os.path.join("data", "diagnostics", f"diagnostics_{diagnostics_toggle}_N={N_best_matches}_cs={cluster_size}.csv")
+    
+    if diagnostics_toggle == 'single':
+        # For individual images
+        df_full[['found_room', 'calculation_time']] = df_full['user_image_name'].apply(
+            lambda x: get_room_name_and_time(x, rooms_json_path, N_best_matches, cluster_size)
+        ).apply(pd.Series)
 
-            print_statistics(df_full, toggle=diagnostics_toggle, save_path=diagnostics_csv_path)
-        
-        elif diagnostics_toggle == 'multi':
+        print_statistics(df_full, toggle=diagnostics_toggle, save_path=diagnostics_csv_path)
+    
+    elif diagnostics_toggle == 'multi':
 
-            # For grouped images
-            grouped_df = df_full.groupby('position_id').agg({
-                'user_image_name': list, 'true_room': 'first'
-            }).reset_index()
+        # For grouped images
+        grouped_df = df_full.groupby('position_id').agg({
+            'user_image_name': list, 'true_room': 'first'
+        }).reset_index()
 
-            filtered_df = grouped_df[grouped_df['user_image_name'].apply(len) >= 2].copy()
+        filtered_df = grouped_df[grouped_df['user_image_name'].apply(len) >= 2].copy()
 
-            filtered_df[['found_room', 'calculation_time']] = filtered_df['user_image_name'].apply(
-                lambda x: get_room_name_and_time(x, rooms_json_path, N_best_matches, cluster_size)
-            ).apply(pd.Series)
+        filtered_df[['found_room', 'calculation_time']] = filtered_df['user_image_name'].apply(
+            lambda x: get_room_name_and_time(x, rooms_json_path, N_best_matches, cluster_size)
+        ).apply(pd.Series)
 
-            print_statistics(filtered_df, toggle=diagnostics_toggle, save_path=diagnostics_csv_path)
+        print_statistics(filtered_df, toggle=diagnostics_toggle, save_path=diagnostics_csv_path)
