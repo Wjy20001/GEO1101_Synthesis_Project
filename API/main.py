@@ -22,9 +22,10 @@ data_path = os.path.join(API_FOLDER_PATH, "data")
 # Create FastAPI instance
 app = FastAPI()
 allowed_origins = [
-    "*",
     "http://localhost:9000",
-    "https://synthesis-proj.netlify.app/",
+    "https://synthesis-proj.netlify.app",
+    "http://localhost:8080",
+    "https://localhost:8080",
 ]
 
 app.add_middleware(
@@ -33,7 +34,19 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_origin_regex="https://.*\.netlify\.app",
 )
+
+
+# Also add security headers
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Strict-Transport-Security"] = (
+        "max-age=31536000; includeSubDomains"
+    )
+    return response
+
 
 # Ensure the user_data_cache folder exists
 cache_dir = os.path.join(API_FOLDER_PATH, "user_data_cache")
