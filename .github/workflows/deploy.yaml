@@ -44,12 +44,12 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64
           tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/synthesis-api:latest
-          # cache-from: type=gha
-          # cache-to: type=gha,mode=max
-      - name: Log Docker image
-        run: |
-          docker images
+          timeout-minutes: 15
+
+      - name: Verify Next Step
+        run: echo "Docker build and push completed successfully."
 
       - name: Deploy to Cloud Run
         run: |
@@ -61,21 +61,4 @@ jobs:
             --project ${{ secrets.GCP_PROJECT_ID }} \
             --memory 2Gi \
             --timeout 300s \
-            --set-env-vars="ENVIRONMENT=production,REFERENCE_DATA_URL=${{ secrets.REFERENCE_DATA_URL }}"
-
-      # Optional: Post-deployment verification or notifications
-      # - name: Verify Deployment
-      #   run: |
-      #     FUNCTION_URL=$(gcloud functions describe fastapi-function --format 'value(httpsTrigger.url)')
-      #     echo "Function deployed at: $FUNCTION_URL"
-      #     curl -s $FUNCTION_URL || exit 1
-
-      # - name: Notify on Slack (Example)
-      #   uses: slackapi/slack-github-action@v1.23.0
-      #   with:
-      #     payload: |
-      #       {
-      #         "text": "FastAPI application has been successfully deployed to Google Cloud Run."
-      #       }
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            --set-env-vars=ENVIRONMENT=production,REFERENCE_DATA_URL=${{ secrets.REFERENCE_DATA_URL }}

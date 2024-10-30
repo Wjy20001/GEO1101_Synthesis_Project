@@ -1,20 +1,34 @@
 # Stage 1: Build stage
-FROM python:3.11-slim as builder
+FROM --platform=linux/amd64 python:3.11-slim as builder
 
 WORKDIR /app
 
-RUN pip install poetry
+ENV PIP_NO_CACHE_DIR=1 \
+  PIP_DISABLE_PIP_VERSION_CHECK=1
 
-COPY pyproject.toml poetry.lock ./
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  build-essential \
+  gcc \
+  python3-dev \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN poetry config virtualenvs.create false
+# Copy requirements file
+COPY requirements.txt .
 
-RUN poetry install --no-dev --no-root
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Runtime stage
-FROM python:3.11-slim
+FROM --platform=linux/amd64 python:3.11-slim
 
 WORKDIR /app
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  gcc \
+  python3-dev \
+  && rm -rf /var/lib/apt/lists/*
 
 # Copy only necessary files from builder
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
@@ -30,16 +44,11 @@ COPY API/data/slam_coordinates.csv ./API/data/
 # Create cache directory
 RUN mkdir -p API/data/user_data_cache
 
-# Install uvicorn explicitly
-RUN pip install uvicorn
-
 # Set environment variables
-ENV PYTHONPATH=/app
-ENV PORT=8080
-ENV ENVIRONMENT=production
+ENV PYTHONPATH=/app \
+  PORT=8080 \
+  ENVIRONMENT=production
 
-# Expose port
 EXPOSE 8080
 
-# Run the application with host and port
 CMD python -m uvicorn API.main:app --host 0.0.0.0 --port $PORT

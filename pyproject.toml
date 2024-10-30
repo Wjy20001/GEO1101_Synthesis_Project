@@ -23,6 +23,7 @@ functions-framework = "^3.8.1"
 geopandas = "^1.0.1"
 scikit-learn = "^1.5.2"
 requests = "^2.32.3"
+pydantic-core = "^2.25.0"
 
 
 [tool.poetry.group.dev.dependencies]
