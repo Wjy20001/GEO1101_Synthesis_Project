@@ -254,4 +254,4 @@ if __name__ == "__main__":
         port = 8000
 
     # For Cloud Run, always use 0.0.0.0 as host
-    uvicorn.run(app)
+    uvicorn.run(app, host="0.0.0.0", port=port)
