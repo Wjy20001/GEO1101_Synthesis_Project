@@ -193,6 +193,8 @@ async def find_route(start_room_name: str, end_room_name: str):
         print("Start Room:\t", start_room_name)
         print("End Room:\t", end_room_name)
 
+        rooms_to_exclude = []
+
         # Run navigation function to generate the GeoJSON file
         navigation(
             start_room_name,
@@ -200,6 +202,7 @@ async def find_route(start_room_name: str, end_room_name: str):
             floorplan_json_path,
             nodes_json_path,
             route_json_path,
+            restricted_rooms=rooms_to_exclude
         )
 
     except subprocess.CalledProcessError as e:
