@@ -35,7 +35,7 @@ const useUserLocation = create<UserLocation>((set) => {
     position: {
       lat: 52.00585831525125,
       lng: 4.370286572894657,
-      room: 'main_entrance',
+      room: 'entrance',
     },
     setLocation: (position) => set({ position }),
   };
