@@ -8,9 +8,45 @@ interface Position {
 interface UserGPS {
   position?: Position;
   setLocation: (position: Position) => void;
+  startWatching: () => void;
+  stopWatching: () => void;
 }
 
 const useUserLocation = create<UserGPS>((set) => {
+  let watchId: number | null = null;
+
+  const startWatching = () => {
+    if (!navigator.geolocation) {
+      console.warn('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        set({
+          position: { lat: latitude, lng: longitude },
+        });
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
+  };
+
+  const stopWatching = () => {
+    if (watchId !== null) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+    }
+  };
+
+  // Get initial position
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -20,11 +56,9 @@ const useUserLocation = create<UserGPS>((set) => {
         });
       },
       (error) => {
-        console.error('Geolocation error:', error);
+        console.error('Initial geolocation error:', error);
       }
     );
-  } else {
-    console.warn('Geolocation is not supported by this browser.');
   }
 
   return {
@@ -34,6 +68,8 @@ const useUserLocation = create<UserGPS>((set) => {
       room: 'main_entrance',
     },
     setLocation: (position) => set({ position }),
+    startWatching,
+    stopWatching,
   };
 });
 

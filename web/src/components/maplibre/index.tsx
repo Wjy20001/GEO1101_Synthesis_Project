@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import maplibregl, { GetResourceResponse } from 'maplibre-gl';
+import maplibregl, {
+  GetResourceResponse,
+  NavigationControl,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import locationImage from '../../assets/location.png';
 import { GeoJSON } from 'geojson';
@@ -78,24 +81,25 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
                 'line-join': 'round',
               },
               paint: {
-                'line-color': '#fff',
+                'line-color': '#FFA500',
                 'line-width': 5,
-                'line-opacity': 0,
+                'line-opacity': 0.5,
               },
             });
 
-            let opacity = 0;
-            const duration = 3000;
+            const minOpacity = 0.5;
+            const maxOpacity = 1.0;
+            const opacityRange = maxOpacity - minOpacity;
+            const duration = 2000;
             const startTime = performance.now();
 
             function animate(currentTime: number) {
               const elapsed = (currentTime - startTime) % duration;
               const progress = elapsed / duration;
 
-              // Create a sine wave pattern for smooth repeating fade
-              opacity = (Math.sin(progress * Math.PI * 2) + 1) / 2;
-              // Or use this for fade in-out pattern:
-              // opacity = progress <= 0.5 ? progress * 2 : 2 - (progress * 2);
+              const opacity =
+                minOpacity +
+                (opacityRange * (Math.sin(progress * Math.PI * 2) + 1)) / 2;
 
               map.setPaintProperty('route', 'line-opacity', opacity);
               animationFrameId = requestAnimationFrame(animate);
@@ -125,6 +129,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
                   0.8, // Higher opacity for selected room
                   0.5, // Default opacity
                 ],
+                'fill-outline-color': '#2977ff',
               },
             });
             map.addLayer({
@@ -331,6 +336,16 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
             .catch((error: Error) => {
               throw error;
             });
+
+          // Add navigation control with compass
+          map.addControl(
+            new NavigationControl({
+              showCompass: true,
+              showZoom: false,
+              visualizePitch: true,
+            }),
+            'top-right' // You can change position: 'top-left', 'bottom-right', 'bottom-left'
+          );
         });
 
         // Clean up on unmount
