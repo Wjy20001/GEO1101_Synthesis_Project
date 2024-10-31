@@ -216,9 +216,9 @@ def plot_mismatched_coords(df, geojson_path):
             plt.scatter(cluster_center[0], cluster_center[1], color='orange', label='Cluster Center', marker='x', s=100)
             
             # Add title and labels
-            plt.title(f"Row {idx} - Matched Coordinates and Cluster Center with Floorplan")
-            plt.xlabel("X Coordinate")
-            plt.ylabel("Y Coordinate")
+            plt.title(f"Test user position {idx} - Coordinate Clustering")
+            plt.xlabel("Latitude")
+            plt.ylabel("Longitude")
             plt.legend()
             plt.grid()
             # Display the plot
