@@ -2,8 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import maplibregl, {
   GetResourceResponse,
   NavigationControl,
+  ScaleControl,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import './maplibre.css';
 import locationImage from '../../assets/location.png';
 import { GeoJSON } from 'geojson';
 
@@ -49,7 +51,9 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
       bearing: initialBearing,
     } = initialCamerea || {};
 
+    const mapInstance = useRef<maplibregl.Map | null>(null);
     const mapContainer = useRef<HTMLDivElement>(null);
+    const locationPopup = useRef<maplibregl.Popup | null>(null);
 
     useEffect(() => {
       if (mapContainer.current) {
@@ -64,9 +68,17 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
           maxBounds: maxBounds,
         });
 
+        mapInstance.current = map;
+
         let animationFrameId: number;
 
         map.on('load', () => {
+          const scale = new ScaleControl({
+            maxWidth: 100,
+            unit: 'metric',
+          });
+          map.addControl(scale, 'bottom-left');
+
           if (route) {
             map.addSource('route', {
               type: 'geojson',
@@ -126,10 +138,9 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
                 'fill-opacity': [
                   'case',
                   ['boolean', ['feature-state', 'selected'], false],
-                  0.8, // Higher opacity for selected room
-                  0.5, // Default opacity
+                  0.8,
+                  0.4,
                 ],
-                'fill-outline-color': '#2977ff',
               },
             });
             map.addLayer({
@@ -166,7 +177,6 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
           });
 
           if (userGPS) {
-            console.log('userGPS', userGPS);
             map.addSource('user-gps', {
               type: 'geojson',
               data: {
@@ -269,7 +279,6 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
                 pulseRadius
               );
 
-              // Optionally, update circle-opacity for a fading effect
               const newOpacity = expanding
                 ? Math.min(1, 0.6 + (pulseRadius - 10) / 20)
                 : Math.max(0, 0.6 - (pulseRadius - 10) / 20);
@@ -286,27 +295,21 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
             // Start the animation
             animatePulse();
 
-            if (userRoom) {
-              map.addLayer({
-                id: 'user-room-label',
-                type: 'symbol',
-                source: 'user-location',
-                layout: {
-                  'text-field': ['concat', 'You are in: ', userRoom],
-                  'text-anchor': 'top',
-                  'text-offset': [0, 1.5],
-                  'text-size': 14,
-                },
-                paint: {
-                  'text-color': '#ffffff',
-                  'text-halo-color': '#000000',
-                  'text-halo-width': 1,
-                },
-              });
-            }
+            if (locationPopup.current) locationPopup.current.remove();
+
+            locationPopup.current = new maplibregl.Popup({
+              closeButton: false,
+              closeOnClick: false,
+              offset: [0, -15],
+              className: 'user-location-popup',
+            })
+              .setLngLat([userLocation.longitude, userLocation.latitude])
+              .setHTML(
+                `<div style="color: white;">You are in ${userRoom}</div>`
+              )
+              .addTo(map);
           }
 
-          // Add Orientation Indicator Layer
           map
             .loadImage(locationImage)
             .then(
@@ -315,7 +318,6 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
                   map.addImage('arrow-15', image.data, { sdf: true });
                 }
 
-                // Add the symbol layer after the image is added
                 map.addLayer({
                   id: 'user-orientation',
                   type: 'symbol',
@@ -337,14 +339,13 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
               throw error;
             });
 
-          // Add navigation control with compass
           map.addControl(
             new NavigationControl({
               showCompass: true,
               showZoom: false,
               visualizePitch: true,
             }),
-            'top-right' // You can change position: 'top-left', 'bottom-right', 'bottom-left'
+            'top-right'
           );
         });
 

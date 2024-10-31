@@ -1,0 +1,10 @@
+.user-location-popup .maplibregl-popup-content {
+  background: #323232;
+  color: white;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.user-location-popup .maplibregl-popup-tip {
+  border-top-color: #323232;
+}
