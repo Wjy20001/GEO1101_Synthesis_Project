@@ -60,7 +60,7 @@ const Page = () => {
           }}
         >
           <Select
-            placeholder="Where you go?"
+            placeholder="Where to go?"
             value={selectedRoom}
             data={rooms}
             onChange={(value, _) => handleRoomSelect(value)}

@@ -26,7 +26,6 @@ const instructions = [
   'Please take a photo of your environment on the right-hand side.',
   'Please take a photo of your environment on the front.',
   'Please take a photo of your environment on the left-hand side.',
-  'Please take a photo of your environment on the above.',
 ];
 
 const Camera = ({ onToggleMode }: CameraProps) => {
@@ -52,7 +51,7 @@ const Camera = ({ onToggleMode }: CameraProps) => {
         });
         setPhotos((prevPhotos) => {
           const newPhotos = [...prevPhotos, file];
-          if (newPhotos.length >= 4) {
+          if (newPhotos.length >= 3) {
             setFinished(true);
           }
           return newPhotos;
@@ -146,8 +145,8 @@ const Camera = ({ onToggleMode }: CameraProps) => {
                     </Text>
                     <Container size={200}>
                       <CircularProgressbar
-                        value={(photos.length / 4) * 100}
-                        text={`${photos.length}/4`}
+                        value={(photos.length / 3) * 100}
+                        text={`${photos.length}/3`}
                         styles={buildStyles({
                           pathColor: theme.primaryColor,
                           textColor: theme.primaryColor,

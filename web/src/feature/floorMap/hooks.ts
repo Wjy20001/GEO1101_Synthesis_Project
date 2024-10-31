@@ -1,15 +1,29 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { useDestination, useRoute, useUserLocation } from '../../state';
+import {
+  useDestination,
+  useRoute,
+  useUserGPS,
+  useUserLocation,
+} from '../../state';
 import { Camerea, UserLocation } from '../../components/maplibre';
 import indoorMap from '../../assets/floorplan.geojson';
 import { GeoJSON } from 'geojson';
 
 const useFloorMap = () => {
   const position = useUserLocation((state) => state.position);
-
+  const userGPS = useUserGPS((state) => state.position);
+  const watchGPS = useUserGPS((state) => state.startWatching);
+  const stopWatchGPS = useUserGPS((state) => state.stopWatching);
   const selectRoom = useDestination((state) => state.setDestination);
-  const selectedRoom = useDestination((state) => state.destination);
   const route = useRoute((state) => state.route);
+
+  useEffect(() => {
+    watchGPS();
+    return () => {
+      stopWatchGPS();
+    };
+  }, []);
+
   const handleRoomSelect = useCallback(
     (roomId: string | null) => {
       if (!roomId) return;
@@ -51,8 +65,8 @@ const useFloorMap = () => {
   };
 
   const maxBounds: [[number, number], [number, number]] = [
-    [4.367417989524314, 52.00093467046407],
-    [4.475395988362235, 52.00736618403458],
+    [4.369105271117121, 52.00440918787575],
+    [4.371939161759968, 52.007189541331286],
   ];
 
   return {
@@ -63,6 +77,7 @@ const useFloorMap = () => {
     route,
     handleRoomSelect,
     userRoom: position.room,
+    userGPS,
   };
 };
 

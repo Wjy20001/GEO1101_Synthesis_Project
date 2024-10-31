@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import maplibregl, { GetResourceResponse } from 'maplibre-gl';
+import maplibregl, {
+  GetResourceResponse,
+  NavigationControl,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import locationImage from '../../assets/location.png';
 import { GeoJSON } from 'geojson';
@@ -25,6 +28,7 @@ interface MapLibreProps {
   route?: GeoJSON;
   indoorMap?: GeoJSON;
   onRoomClick?: (room: string) => void;
+  userGPS?: { lat: number; lng: number };
 }
 
 const MapLibre: React.FC<MapLibreProps> = React.memo(
@@ -36,6 +40,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
     indoorMap,
     onRoomClick,
     userRoom,
+    userGPS,
   }) => {
     const {
       center: initialCenter,
@@ -52,17 +57,16 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
           container: mapContainer.current,
           style:
             'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-          center: initialCenter, // Initial center
-          zoom: initialZoom, // Initial zoom
-          pitch: initialPitch, // Initial pitch
-          bearing: initialBearing, // Initial bearing
-          maxBounds: maxBounds, // Constrain the map view to the specified bounds
+          center: initialCenter,
+          zoom: initialZoom,
+          pitch: initialPitch,
+          bearing: initialBearing,
+          maxBounds: maxBounds,
         });
 
         let animationFrameId: number;
 
         map.on('load', () => {
-          // Add line string
           if (route) {
             map.addSource('route', {
               type: 'geojson',
@@ -72,11 +76,36 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
               id: 'route',
               type: 'line',
               source: 'route',
+              layout: {
+                'line-cap': 'round',
+                'line-join': 'round',
+              },
               paint: {
-                'line-color': '#fff',
+                'line-color': '#FFA500',
                 'line-width': 5,
+                'line-opacity': 0.5,
               },
             });
+
+            const minOpacity = 0.5;
+            const maxOpacity = 1.0;
+            const opacityRange = maxOpacity - minOpacity;
+            const duration = 2000;
+            const startTime = performance.now();
+
+            function animate(currentTime: number) {
+              const elapsed = (currentTime - startTime) % duration;
+              const progress = elapsed / duration;
+
+              const opacity =
+                minOpacity +
+                (opacityRange * (Math.sin(progress * Math.PI * 2) + 1)) / 2;
+
+              map.setPaintProperty('route', 'line-opacity', opacity);
+              animationFrameId = requestAnimationFrame(animate);
+            }
+
+            animationFrameId = requestAnimationFrame(animate);
           }
           if (indoorMap) {
             map.addSource('floor-map', {
@@ -100,6 +129,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
                   0.8, // Higher opacity for selected room
                   0.5, // Default opacity
                 ],
+                'fill-outline-color': '#2977ff',
               },
             });
             map.addLayer({
@@ -134,6 +164,53 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
           map.on('mouseleave', 'floor-map', () => {
             map.getCanvas().style.cursor = '';
           });
+
+          if (userGPS) {
+            console.log('userGPS', userGPS);
+            map.addSource('user-gps', {
+              type: 'geojson',
+              data: {
+                type: 'FeatureCollection',
+                features: [
+                  {
+                    type: 'Feature',
+                    geometry: {
+                      type: 'Point',
+                      coordinates: [userGPS.lng, userGPS.lat],
+                    },
+                    properties: {},
+                  },
+                ],
+              },
+            });
+            map.addLayer({
+              id: 'user-gps',
+              type: 'circle',
+              source: 'user-gps',
+              paint: {
+                'circle-radius': 10,
+                'circle-color': '#FF9900',
+                'circle-opacity': 0.6,
+                'circle-blur': 1,
+              },
+            });
+            map.addLayer({
+              id: 'user-gps-label',
+              type: 'symbol',
+              source: 'user-gps',
+              layout: {
+                'text-field': ['concat', 'GNSS Location'],
+                'text-anchor': 'top',
+                'text-offset': [0, 1.5],
+                'text-size': 14,
+              },
+              paint: {
+                'text-color': '#ffffff',
+                'text-halo-color': '#000000',
+                'text-halo-width': 1,
+              },
+            });
+          }
 
           if (userLocation) {
             map.addSource('user-location', {
@@ -259,6 +336,16 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
             .catch((error: Error) => {
               throw error;
             });
+
+          // Add navigation control with compass
+          map.addControl(
+            new NavigationControl({
+              showCompass: true,
+              showZoom: false,
+              visualizePitch: true,
+            }),
+            'top-right' // You can change position: 'top-left', 'bottom-right', 'bottom-left'
+          );
         });
 
         // Clean up on unmount
@@ -277,6 +364,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
       indoorMap,
       userRoom,
       onRoomClick,
+      userGPS,
       route,
     ]);
 

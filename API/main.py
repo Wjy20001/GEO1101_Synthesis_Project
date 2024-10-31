@@ -25,14 +25,13 @@ allowed_origins = [
     "http://localhost:9000",
     "https://synthesis-proj.netlify.app",
     "http://localhost:8080",
-    "https://localhost:8080",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
     allow_origin_regex="https://.*\.netlify\.app",
 )
@@ -202,7 +201,7 @@ async def find_route(start_room_name: str, end_room_name: str):
             floorplan_json_path,
             nodes_json_path,
             route_json_path,
-            restricted_rooms=rooms_to_exclude
+            restricted_rooms=rooms_to_exclude,
         )
 
     except subprocess.CalledProcessError as e:

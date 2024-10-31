@@ -74,6 +74,6 @@ jobs:
             --region europe-west1 \
             --allow-unauthenticated \
             --project ${{ secrets.GCP_PROJECT_ID }} \
-            --memory 2Gi \
+            --memory 4Gi \
             --timeout 300s \
             --set-env-vars=ENVIRONMENT=production,REFERENCE_DATA_URL=${{ secrets.REFERENCE_DATA_URL }}
