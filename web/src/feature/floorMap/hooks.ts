@@ -12,17 +12,17 @@ import { GeoJSON } from 'geojson';
 const useFloorMap = () => {
   const position = useUserLocation((state) => state.position);
   const userGPS = useUserGPS((state) => state.position);
-  const watchGPS = useUserGPS((state) => state.startWatching);
-  const stopWatchGPS = useUserGPS((state) => state.stopWatching);
+  // const watchGPS = useUserGPS((state) => state.startWatching);
+  // const stopWatchGPS = useUserGPS((state) => state.stopWatching);
   const selectRoom = useDestination((state) => state.setDestination);
   const route = useRoute((state) => state.route);
 
-  useEffect(() => {
-    watchGPS();
-    return () => {
-      stopWatchGPS();
-    };
-  }, []);
+  // useEffect(() => {
+  //   watchGPS();
+  //   return () => {
+  //     stopWatchGPS();
+  //   };
+  // }, []);
 
   const handleRoomSelect = useCallback(
     (roomId: string | null) => {
