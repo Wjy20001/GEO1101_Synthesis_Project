@@ -192,7 +192,7 @@ async def find_route(start_room_name: str, end_room_name: str):
         print("Start Room:\t", start_room_name)
         print("End Room:\t", end_room_name)
 
-        rooms_to_exclude = []
+        rooms_to_exclude = ['orange hall']
 
         # Run navigation function to generate the GeoJSON file
         navigation(
