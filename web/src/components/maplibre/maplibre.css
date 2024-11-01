@@ -8,3 +8,26 @@
 .user-location-popup .maplibregl-popup-tip {
   border-top-color: #323232;
 }
+
+.maplibregl-ctrl-compass {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+// For just the arrow size:
+.maplibregl-ctrl-compass .maplibregl-ctrl-compass-arrow {
+  transform: scale(1.7);
+}
+
+// For button spacing:
+.maplibregl-ctrl-group button {
+  margin: 5px !important;
+}
+
+.maplibregl-ctrl-group {
+  background: gray !important;
+}
+
+.maplibregl-ctrl-group button {
+  background: gray !important;
+}

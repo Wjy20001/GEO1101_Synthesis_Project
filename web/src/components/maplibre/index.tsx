@@ -345,7 +345,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
               showZoom: false,
               visualizePitch: true,
             }),
-            'top-right'
+            'bottom-left'
           );
         });
 
