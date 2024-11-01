@@ -1,9 +1,12 @@
-
 # Project README
 
 ## Overview
 
-This project is designed to perform image matching using a Bag of Words (BoW) model, leveraging KMeans clustering and ORB descriptors. The project is organized into separate Python scripts that allow for the extraction of image frames from videos, computation of ORB descriptors, KMeans clustering for BoW vectors, and matching sample images to a dataset using the BoW model.
+This project presents an indoor navigation system based on image matching, aiming to address the challenges of localization and navigation in indoor environments. The system utilizes Simultaneous Localization and Mapping (SLAM) technology to capture high-resolution images and point cloud data, combined with the VGG16 model from Convolutional Neural Networks (CNN) for image processing, feature extraction, and matching.
+
+In our research, we conducted experiments at the Faculty of Architecture and the Built Environment of Delft University of Technology, using a SLAM scanner to obtain 360-degree panoramic images and point cloud data of the indoor environment. Through cube mapping projection, we converted the panoramic images into six planar views, selecting the front, right, and left views as positioning references. Additionally, we reconstructed the indoor environment structure and designed node networks for positioning and navigation.
+
+The system also provides a web-based application consisting of an app running in the browser and a server app to process image matching. Additionally, by collaborating with Esri Nederland, we leverage their technical expertise to enhance the system's usability and ensure it can be applied in diverse indoor environments.
 
 ## Project Structure
 
