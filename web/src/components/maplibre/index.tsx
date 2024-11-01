@@ -365,7 +365,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
       indoorMap,
       userRoom,
       onRoomClick,
-      userGPS,
+      // userGPS,
       route,
     ]);
 
