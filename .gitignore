@@ -164,3 +164,4 @@ API/input_images/*
 !API/data/floorplan.geojson
 !API/data/nodes.geojson
 !API/data/slam_coordinates.csv
+!data/diagnostics/*
