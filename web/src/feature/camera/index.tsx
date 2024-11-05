@@ -12,7 +12,12 @@ import {
 } from '@mantine/core';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { IconCamera, IconCheck } from '@tabler/icons-react';
+import {
+  IconCamera,
+  IconCheck,
+  IconArrowBigLeft,
+  IconArrowBigRight,
+} from '@tabler/icons-react';
 import { useCallback, useRef, useState } from 'react';
 import WebcamComp from 'react-webcam';
 import { useLoading, useUserLocation } from '../../state';
@@ -125,7 +130,7 @@ const Camera = ({ onToggleMode }: CameraProps) => {
                 <div
                   style={{
                     display: 'flex',
-                    justifyContent: 'center',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
                     height: '100vh',
                     width: '100vw',
@@ -138,23 +143,66 @@ const Camera = ({ onToggleMode }: CameraProps) => {
                   <Stack
                     align="center"
                     justify="center"
-                    style={{ height: '100vh', width: '100vw' }}
+                    style={{
+                      width: '100%',
+                      height: '100vh',
+                      position: 'relative',
+                    }}
                   >
                     <Text size="xl" style={{ color: theme.colors.dark[0] }}>
                       {instructions[photos.length]}
                     </Text>
-                    <Container size={200}>
-                      <CircularProgressbar
-                        value={(photos.length / 3) * 100}
-                        text={`${photos.length}/3`}
-                        styles={buildStyles({
-                          pathColor: theme.primaryColor,
-                          textColor: theme.primaryColor,
-                          trailColor: '#d6d6d6',
-                        })}
-                        strokeWidth={8}
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '300px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '32px',
+                      }}
+                    >
+                      <style>
+                        {`
+                          @keyframes pulse {
+                            0% { opacity: 0.3; }
+                            50% { opacity: 1; }
+                            100% { opacity: 0.3; }
+                          }
+                        `}
+                      </style>
+
+                      <IconArrowBigLeft
+                        size={48}
+                        color={theme.colors.dark[0]}
+                        fill={theme.colors.dark[0]}
+                        style={{
+                          animation: 'pulse 2s ease-in-out infinite',
+                        }}
                       />
-                    </Container>
+
+                      <Container size={200}>
+                        <CircularProgressbar
+                          value={(photos.length / 3) * 100}
+                          text={`${photos.length}/3`}
+                          styles={buildStyles({
+                            pathColor: theme.primaryColor,
+                            textColor: theme.primaryColor,
+                            trailColor: '#d6d6d6',
+                          })}
+                          strokeWidth={8}
+                        />
+                      </Container>
+
+                      <IconArrowBigRight
+                        size={48}
+                        color={theme.colors.dark[0]}
+                        fill={theme.colors.dark[0]}
+                        style={{
+                          animation: 'pulse 2s ease-in-out infinite',
+                        }}
+                      />
+                    </div>
                   </Stack>
                 </div>
                 {/* Capture Button */}
