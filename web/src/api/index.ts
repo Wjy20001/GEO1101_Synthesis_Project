@@ -7,7 +7,7 @@ import {
 } from '../state';
 
 const BASE_URL = 'https://synthesis-api-264879243442.europe-west1.run.app';
-
+// const BASE_URL = 'http://localhost:8000';
 export const useAPI = () => {
   const setLoading = useLoading((state) => state.setLoading);
   const setRoute = useRoute((state) => state.setRoute);

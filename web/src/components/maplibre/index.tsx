@@ -148,7 +148,7 @@ const MapLibre: React.FC<MapLibreProps> = React.memo(
               type: 'symbol',
               source: 'floor-map',
               layout: {
-                'text-field': ['get', 'room'],
+                'text-field': ['get', 'label'],
                 'text-anchor': 'center',
                 'text-size': 12,
               },
